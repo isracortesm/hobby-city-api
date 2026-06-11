@@ -1,0 +1,68 @@
+{
+  "kind": "collectionType",
+  "collectionName": "events",
+  "info": {
+    "singularName": "event",
+    "pluralName": "events",
+    "displayName": "Event"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "eventId": {
+      "type": "uid",
+      "required": true,
+      "regex": "^[a-zA-Z0-9]{8}$"
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "description": {
+      "type": "richtext",
+      "required": true
+    },
+    "costType": {
+      "type": "enumeration",
+      "required": true,
+      "default": "free",
+      "enum": [
+        "free",
+        "paid"
+      ]
+    },
+    "cost": {
+      "type": "decimal"
+    },
+    "startDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "endDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "likes": {
+      "type": "biginteger",
+      "required": true,
+      "default": "0"
+    },
+    "adminUser": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user"
+    },
+    "socialNetworks": {
+      "type": "component",
+      "component": "social.network",
+      "repeatable": true
+    },
+    "address": {
+      "type": "component",
+      "component": "place.address",
+      "repeatable": false
+    }
+  }
+}

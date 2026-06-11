@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "activity_collaborators",
+  "info": {
+    "singularName": "activity-collaborator",
+    "pluralName": "activity-collaborators",
+    "displayName": "ActivityCollaborator"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "role": {
+      "type": "enumeration",
+      "required": true,
+      "default": "other",
+      "enum": [
+        "judge",
+        "speaker",
+        "instructor",
+        "other"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "activity": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::activity.activity"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user"
+    }
+  }
+}

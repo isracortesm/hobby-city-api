@@ -1,0 +1,38 @@
+{
+    "kind": "collectionType",
+    "collectionName": "models",
+    "info": {
+        "singularName": "model",
+        "pluralName": "models",
+        "displayName": "Model"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files"
+            ]
+        },
+        "code": {
+            "type": "uid"
+        },
+        "user": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "admin::user"
+        }
+    }
+}

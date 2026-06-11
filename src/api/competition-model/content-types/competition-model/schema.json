@@ -1,0 +1,30 @@
+{
+  "kind": "collectionType",
+  "collectionName": "competition_models",
+  "info": {
+    "singularName": "competition-model",
+    "pluralName": "competition-models",
+    "displayName": "CompetitionModel"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "competition": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::competition.competition"
+    },
+    "model": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::model.model"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::competition-category.competition-category"
+    }
+  }
+}

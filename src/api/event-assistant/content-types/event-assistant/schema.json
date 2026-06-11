@@ -1,0 +1,28 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_assistants",
+  "info": {
+    "singularName": "event-assistant",
+    "pluralName": "event-assistants",
+    "displayName": "EventAssistant"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "checkIn": {
+      "type": "datetime"
+    },
+    "event": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::event.event"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user"
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "collectionName": "components_place_addresses",
+  "info": {
+    "displayName": "address",
+    "icon": "house"
+  },
+  "options": {},
+  "attributes": {
+    "description": {
+      "type": "string"
+    },
+    "zipCode": {
+      "type": "string"
+    },
+    "geolocation": {
+      "type": "component",
+      "component": "place.geolocation",
+      "repeatable": false
+    }
+  },
+  "config": {}
+}

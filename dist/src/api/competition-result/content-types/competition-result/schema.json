@@ -1,0 +1,41 @@
+{
+    "kind": "collectionType",
+    "collectionName": "competition_results",
+    "info": {
+        "singularName": "competition-result",
+        "pluralName": "competition-results",
+        "displayName": "CompetitionResult"
+    },
+    "options": {
+        "draftAndPublish": true
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "order": {
+            "type": "integer"
+        },
+        "totalPoints": {
+            "type": "integer"
+        },
+        "model": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::competition-model.competition-model"
+        },
+        "reviewer": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::activity-collaborator.activity-collaborator"
+        },
+        "batch": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::competition-batch.competition-batch"
+        },
+        "evaluations": {
+            "type": "component",
+            "component": "competition.evaluation",
+            "repeatable": true
+        }
+    }
+}

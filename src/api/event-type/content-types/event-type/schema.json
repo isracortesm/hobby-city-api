@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_types",
+  "info": {
+    "singularName": "event-type",
+    "pluralName": "event-types",
+    "displayName": "ActivityType"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "enumeration",
+      "required": true,
+      "default": "other",
+      "enum": [
+        "tournament",
+        "competition",
+        "workshop",
+        "meeting",
+        "other"
+      ]
+    },
+    "decription": {
+      "type": "string"
+    },
+    "isActive": {
+      "type": "boolean",
+      "required": true,
+      "default": true
+    }
+  }
+}

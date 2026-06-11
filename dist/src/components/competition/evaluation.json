@@ -1,0 +1,21 @@
+{
+    "collectionName": "components_competition_evaluations",
+    "info": {
+        "displayName": "evaluation",
+        "icon": "feather"
+    },
+    "options": {},
+    "attributes": {
+        "criteria": {
+            "type": "string"
+        },
+        "comments": {
+            "type": "text",
+            "required": true
+        },
+        "value": {
+            "type": "integer"
+        }
+    },
+    "config": {}
+}

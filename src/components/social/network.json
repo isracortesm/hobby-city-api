@@ -1,0 +1,35 @@
+{
+  "collectionName": "components_social_networks",
+  "info": {
+    "displayName": "network",
+    "icon": "earth"
+  },
+  "options": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "required": true,
+      "default": "other",
+      "enum": [
+        "email",
+        "instagram",
+        "fracebook",
+        "pinterest",
+        "x/twitter",
+        "tiktok",
+        "web",
+        "linktree",
+        "other"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    }
+  },
+  "config": {}
+}

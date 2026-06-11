@@ -1,0 +1,7 @@
+/**
+ * activity-collaborator router
+ */
+
+import { factories } from '@strapi/strapi';
+
+export default factories.createCoreRouter('api::activity-collaborator.activity-collaborator');

@@ -1,0 +1,31 @@
+{
+    "kind": "collectionType",
+    "collectionName": "competition_criterias",
+    "info": {
+        "singularName": "competition-criteria",
+        "pluralName": "competition-criterias",
+        "displayName": "CompetitionCriteria"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "description": {
+            "type": "text"
+        },
+        "maxPoints": {
+            "type": "integer",
+            "required": true
+        },
+        "category": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::competition-category.competition-category"
+        }
+    }
+}

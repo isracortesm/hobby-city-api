@@ -1,0 +1,39 @@
+{
+    "kind": "collectionType",
+    "collectionName": "competitions",
+    "info": {
+        "singularName": "competition",
+        "pluralName": "competitions",
+        "displayName": "Competition"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "type": {
+            "type": "enumeration",
+            "required": true,
+            "enum": [
+                "classicByOrder",
+                "classicByPoints",
+                "criteriaByCategory"
+            ]
+        },
+        "hasPublicResults": {
+            "type": "boolean",
+            "required": true,
+            "default": false
+        },
+        "hasActiveRegister": {
+            "type": "boolean",
+            "required": true,
+            "default": true
+        },
+        "activity": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::activity.activity"
+        }
+    }
+}

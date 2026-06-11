@@ -1,0 +1,50 @@
+{
+  "kind": "collectionType",
+  "collectionName": "competition_batches",
+  "info": {
+    "singularName": "competition-batch",
+    "pluralName": "competition-batches",
+    "displayName": "CompetitionBatch"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "batch": {
+      "type": "enumeration",
+      "required": true,
+      "default": "none",
+      "enum": [
+        "gold",
+        "silver",
+        "bronce",
+        "commented",
+        "mention",
+        "none"
+      ]
+    },
+    "batchName": {
+      "type": "string",
+      "required": true
+    },
+    "batchImage": {
+      "type": "media",
+      "multiple": false,
+      "allowedTypes": [
+        "images",
+        "files"
+      ]
+    },
+    "requiredValue": {
+      "type": "integer",
+      "required": false,
+      "default": 0
+    },
+    "category": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::competition-category.competition-category"
+    }
+  }
+}

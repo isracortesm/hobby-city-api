@@ -1,0 +1,36 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_collaborators",
+  "info": {
+    "singularName": "event-collaborator",
+    "pluralName": "event-collaborators",
+    "displayName": "EventCollaborator"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "role": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "staff",
+        "expositor"
+      ]
+    },
+    "description": {
+      "type": "string"
+    },
+    "event": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::event.event"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "admin::user"
+    }
+  }
+}
