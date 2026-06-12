@@ -524,7 +524,6 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    activityImage: Schema.Attribute.Media<'images' | 'files'>;
     activityType: Schema.Attribute.Relation<
       'oneToOne',
       'api::event-type.event-type'
@@ -538,6 +537,7 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     description: Schema.Attribute.RichText & Schema.Attribute.Required;
     endDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
     event: Schema.Attribute.Relation<'oneToOne', 'api::event.event'>;
+    image: Schema.Attribute.Media<'images' | 'files'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -903,6 +903,7 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     description: Schema.Attribute.RichText & Schema.Attribute.Required;
     endDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
     eventId: Schema.Attribute.UID & Schema.Attribute.Required;
+    image: Schema.Attribute.Media<'images' | 'files'>;
     likes: Schema.Attribute.BigInteger &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'0'>;

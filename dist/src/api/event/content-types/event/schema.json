@@ -24,6 +24,14 @@
             "type": "richtext",
             "required": true
         },
+        "image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files"
+            ]
+        },
         "costType": {
             "type": "enumeration",
             "required": true,
