@@ -6,6 +6,7 @@ const config = ({ env }) => ({
             breakpoints: {},
             provider: '@strapi/provider-upload-aws-s3',
             providerOptions: {
+                allowedMimeTypes: ["image/png", "image/jpeg"],
                 baseUrl: env('SUPABASE_S3_URL_PUBLIC'),
                 s3Options: {
                     credentials: {

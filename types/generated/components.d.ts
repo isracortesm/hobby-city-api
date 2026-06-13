@@ -50,10 +50,12 @@ export interface SocialNetwork extends Struct.ComponentSchema {
       [
         'email',
         'instagram',
+        'puttyandpaint',
         'fracebook',
         'pinterest',
-        'x/twitter',
+        'twitter',
         'tiktok',
+        'artstation',
         'web',
         'linktree',
         'other',

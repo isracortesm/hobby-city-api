@@ -15,6 +15,10 @@
       "type": "string",
       "required": true
     },
+    "shortDescription": {
+      "type": "string",
+      "required": true
+    },
     "description": {
       "type": "richtext",
       "required": true
@@ -29,6 +33,8 @@
     },
     "costType": {
       "type": "enumeration",
+      "required": true,
+      "default": "free",
       "enum": [
         "free",
         "paid"
@@ -45,10 +51,10 @@
       "type": "datetime",
       "required": true
     },
-    "activityType": {
+    "category": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "api::event-type.event-type"
+      "target": "api::activity-category.activity-category"
     },
     "event": {
       "type": "relation",

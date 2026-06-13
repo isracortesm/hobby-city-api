@@ -20,8 +20,21 @@
     },
     "competition": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::competition.competition"
+      "relation": "manyToOne",
+      "target": "api::competition.competition",
+      "inversedBy": "categories"
+    },
+    "batches": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::competition-batch.competition-batch",
+      "mappedBy": "category"
+    },
+    "criterias": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::competition-criteria.competition-criteria",
+      "mappedBy": "category"
     }
   }
 }
