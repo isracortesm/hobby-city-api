@@ -3,8 +3,3 @@ runConfig:
   memoryMiB: 1024
   minInstances: 0
   maxInstances: 2
-
-env:
-  # Server
-  - name: HOST
-    value: "0.0.0.0"

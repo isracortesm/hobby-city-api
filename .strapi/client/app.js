@@ -3,12 +3,16 @@
  * Any modifications made will be discarded.
  */
 import strapiCloud from "@strapi/plugin-cloud/strapi-admin";
+import documentation from "@strapi/plugin-documentation/strapi-admin";
 import usersPermissions from "@strapi/plugin-users-permissions/strapi-admin";
+import versionLens from "strapi-plugin-version-lens/strapi-admin";
 import { renderAdmin } from "@strapi/strapi/admin";
 
 renderAdmin(document.getElementById("strapi"), {
   plugins: {
     "strapi-cloud": strapiCloud,
+    documentation: documentation,
     "users-permissions": usersPermissions,
+    "version-lens": versionLens,
   },
 });
