@@ -1,6 +1,5 @@
 {
   "apphosting": {
-    "backendId": "hobby-city-api",
     "rootDir": ".",
     "ignore": [
       "node_modules",

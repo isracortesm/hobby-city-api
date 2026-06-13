@@ -1,0 +1,61 @@
+runConfig:
+  cpu: 1
+  memoryMiB: 1024
+  minInstances: 1
+  maxInstances: 3
+
+env:
+  # Secrets
+  - variable: APP_KEYS
+    secret: APP_KEYS
+
+  - variable: API_TOKEN_SALT
+    secret: API_TOKEN_SALT
+
+  - variable: ADMIN_JWT_SECRET
+    secret: ADMIN_JWT_SECRET
+
+  - variable: TRANSFER_TOKEN_SALT
+    secret: TRANSFER_TOKEN_SALT
+
+  - variable: ENCRYPTION_KEY
+    secret: ENCRYPTION_KEY
+
+  - variable: JWT_SECRET
+    secret: JWT_SECRET
+
+  # Database
+  - variable: DATABASE_URL
+    secret: DATABASE_URL
+
+  - variable: DATABASE_SSL
+    value: "false"
+
+  - variable: DATABASE_FILENAME
+    secret: DATABASE_FILENAME
+
+  # Resend
+  - variable: RESEND_API_KEY
+    secret: RESEND_API_KEY
+
+  - variable: RESEND_EMAIL_FROM
+    secret: RESEND_EMAIL_FROM
+
+  - variable: RESEND_EMAIL_REPLY
+    secret: RESEND_EMAIL_REPLY
+
+  # Supabase Storage
+  - variable: SUPABASE_S3_ACCESS_KEY
+    secret: SUPABASE_S3_ACCESS_KEY
+
+  - variable: SUPABASE_S3_SECRET_KEY
+    secret: SUPABASE_S3_SECRET_KEY
+
+  - variable: SUPABASE_S3_BUCKET
+    secret: SUPABASE_S3_BUCKET
+
+  - variable: SUPABASE_S3_URL
+    secret: SUPABASE_S3_URL
+
+  - variable: SUPABASE_S3_URL_PUBLIC
+    secret: SUPABASE_S3_URL_PUBLIC
