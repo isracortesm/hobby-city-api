@@ -1,61 +1,61 @@
 runConfig:
   cpu: 1
   memoryMiB: 1024
-  minInstances: 0
-  maxInstances: 2
+  minInstances: 1
+  maxInstances: 3
 
 env:
   # Secrets (Asegúrate de que estos nombres existan en Cloud Secret Manager)
   - name: APP_KEYS
-    secret: APP_KEYS/versions/latest
+    secret: APP_KEYS
 
   - name: API_TOKEN_SALT
-    secret: API_TOKEN_SALT/versions/latest
+    secret: API_TOKEN_SALT
 
   - name: ADMIN_JWT_SECRET
-    secret: ADMIN_JWT_SECRET/versions/latest
+    secret: ADMIN_JWT_SECRET
 
   - name: TRANSFER_TOKEN_SALT
-    secret: TRANSFER_TOKEN_SALT/versions/latest
+    secret: TRANSFER_TOKEN_SALT
 
   - name: ENCRYPTION_KEY
-    secret: ENCRYPTION_KEY/versions/latest
+    secret: ENCRYPTION_KEY
 
   - name: JWT_SECRET
-    secret: JWT_SECRET/versions/latest
+    secret: JWT_SECRET
 
   # Database
   - name: DATABASE_URL
-    secret: DATABASE_URL/versions/latest
+    secret: DATABASE_URL
 
   - name: DATABASE_SSL
     value: "false"
 
   - name: DATABASE_FILENAME
-    secret: DATABASE_FILENAME/versions/latest
+    secret: DATABASE_FILENAME
 
   # Resend
   - name: RESEND_API_KEY
-    secret: RESEND_API_KEY/versions/latest
+    secret: RESEND_API_KEY
 
   - name: RESEND_EMAIL_FROM
-    secret: RESEND_EMAIL_FROM/versions/latest
+    secret: RESEND_EMAIL_FROM
 
   - name: RESEND_EMAIL_REPLY
-    secret: RESEND_EMAIL_REPLY/versions/latest
+    secret: RESEND_EMAIL_REPLY
 
   # Supabase Storage
   - name: SUPABASE_S3_ACCESS_KEY
-    secret: SUPABASE_S3_ACCESS_KEY/versions/latest
+    secret: SUPABASE_S3_ACCESS_KEY
 
   - name: SUPABASE_S3_SECRET_KEY
-    secret: SUPABASE_S3_SECRET_KEY/versions/latest
+    secret: SUPABASE_S3_SECRET_KEY
 
   - name: SUPABASE_S3_BUCKET
-    secret: SUPABASE_S3_BUCKET/versions/latest
+    secret: SUPABASE_S3_BUCKET
 
   - name: SUPABASE_S3_URL
-    secret: SUPABASE_S3_URL/versions/latest
+    secret: SUPABASE_S3_URL
 
   - name: SUPABASE_S3_URL_PUBLIC
-    secret: SUPABASE_S3_URL_PUBLIC/versions/latest
+    secret: SUPABASE_S3_URL_PUBLIC
