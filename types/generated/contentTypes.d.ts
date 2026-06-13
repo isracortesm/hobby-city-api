@@ -692,7 +692,7 @@ export interface ApiCompetitionModelCompetitionModel
       'api::competition-category.competition-category'
     >;
     competition: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'api::competition.competition'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -727,6 +727,10 @@ export interface ApiCompetitionResultCompetitionResult
     batch: Schema.Attribute.Relation<
       'oneToOne',
       'api::competition-batch.competition-batch'
+    >;
+    competition: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::competition.competition'
     >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -782,7 +786,15 @@ export interface ApiCompetitionCompetition extends Struct.CollectionTypeSchema {
       'api::competition.competition'
     > &
       Schema.Attribute.Private;
+    models: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::competition-model.competition-model'
+    >;
     publishedAt: Schema.Attribute.DateTime;
+    results: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::competition-result.competition-result'
+    >;
     type: Schema.Attribute.Enumeration<
       ['classicByOrder', 'classicByPoints', 'criteriaByCategory']
     > &
@@ -976,7 +988,10 @@ export interface ApiModelModel extends Struct.CollectionTypeSchema {
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -1487,6 +1502,7 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    models: Schema.Attribute.Relation<'oneToMany', 'api::model.model'>;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
