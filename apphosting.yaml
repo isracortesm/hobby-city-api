@@ -6,5 +6,5 @@ runConfig:
 
 env:
   # Server
-  - variable: HOST
+  - name: HOST
     value: "0.0.0.0"
