@@ -31,13 +31,14 @@
         },
         "activity": {
             "type": "relation",
-            "relation": "oneToOne",
-            "target": "api::activity.activity"
+            "relation": "manyToOne",
+            "target": "api::activity.activity",
+            "inversedBy": "participants"
         },
         "user": {
             "type": "relation",
             "relation": "oneToOne",
-            "target": "admin::user"
+            "target": "plugin::users-permissions.user"
         }
     }
 }
