@@ -34,6 +34,18 @@
             "type": "relation",
             "relation": "oneToOne",
             "target": "api::activity.activity"
+        },
+        "models": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::competition-model.competition-model",
+            "mappedBy": "competition"
+        },
+        "results": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::competition-result.competition-result",
+            "mappedBy": "competition"
         }
     }
 }

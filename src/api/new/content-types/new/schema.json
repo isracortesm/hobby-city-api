@@ -34,13 +34,9 @@
     },
     "event": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::event.event"
-    },
-    "adminUser": {
-      "type": "relation",
-      "relation": "oneToOne",
-      "target": "admin::user"
+      "relation": "manyToOne",
+      "target": "api::event.event",
+      "inversedBy": "news"
     }
   }
 }
