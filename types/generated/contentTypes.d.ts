@@ -440,6 +440,36 @@ export interface AdminUser extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiActivityCategoryActivityCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'activity_categories';
+  info: {
+    displayName: 'ActivityCategory';
+    pluralName: 'activity-categories';
+    singularName: 'activity-category';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::activity-category.activity-category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+  };
+}
+
 export interface ApiActivityCollaboratorActivityCollaborator
   extends Struct.CollectionTypeSchema {
   collectionName: 'activity_collaborators';
@@ -452,7 +482,7 @@ export interface ApiActivityCollaboratorActivityCollaborator
     draftAndPublish: false;
   };
   attributes: {
-    activity: Schema.Attribute.Relation<'oneToOne', 'api::activity.activity'>;
+    activity: Schema.Attribute.Relation<'manyToOne', 'api::activity.activity'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -465,14 +495,17 @@ export interface ApiActivityCollaboratorActivityCollaborator
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
     role: Schema.Attribute.Enumeration<
-      ['judge', 'speaker', 'instructor', 'other']
+      ['admin', 'judge', 'speaker', 'instructor', 'other']
     > &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<'other'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -488,8 +521,7 @@ export interface ApiActivityParticipantActivityParticipant
     draftAndPublish: false;
   };
   attributes: {
-    accessCode: Schema.Attribute.UID & Schema.Attribute.Required;
-    activity: Schema.Attribute.Relation<'oneToOne', 'api::activity.activity'>;
+    activity: Schema.Attribute.Relation<'manyToOne', 'api::activity.activity'>;
     checkIn: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
@@ -509,7 +541,10 @@ export interface ApiActivityParticipantActivityParticipant
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -524,19 +559,24 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    activityType: Schema.Attribute.Relation<
+    category: Schema.Attribute.Relation<
       'oneToOne',
-      'api::event-type.event-type'
+      'api::activity-category.activity-category'
     >;
-    adminUser: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
+    collaborators: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::activity-collaborator.activity-collaborator'
+    >;
     cost: Schema.Attribute.Decimal;
-    costType: Schema.Attribute.Enumeration<['free', 'paid']>;
+    costType: Schema.Attribute.Enumeration<['free', 'paid']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'free'>;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.RichText & Schema.Attribute.Required;
     endDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
-    event: Schema.Attribute.Relation<'oneToOne', 'api::event.event'>;
+    event: Schema.Attribute.Relation<'manyToOne', 'api::event.event'>;
     image: Schema.Attribute.Media<'images' | 'files'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -545,7 +585,12 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    participants: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::activity-participant.activity-participant'
+    >;
     publishedAt: Schema.Attribute.DateTime;
+    shortDescription: Schema.Attribute.String & Schema.Attribute.Required;
     startDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -573,7 +618,7 @@ export interface ApiCompetitionBatchCompetitionBatch
     batchImage: Schema.Attribute.Media<'images' | 'files'>;
     batchName: Schema.Attribute.String & Schema.Attribute.Required;
     category: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'api::competition-category.competition-category'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -605,13 +650,21 @@ export interface ApiCompetitionCategoryCompetitionCategory
     draftAndPublish: false;
   };
   attributes: {
+    batches: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::competition-batch.competition-batch'
+    >;
     competition: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'api::competition.competition'
     >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    criterias: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::competition-criteria.competition-criteria'
+    >;
     description: Schema.Attribute.Text;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -640,7 +693,7 @@ export interface ApiCompetitionCriteriaCompetitionCriteria
   };
   attributes: {
     category: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'api::competition-category.competition-category'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -679,7 +732,7 @@ export interface ApiCompetitionModelCompetitionModel
       'api::competition-category.competition-category'
     >;
     competition: Schema.Attribute.Relation<
-      'oneToOne',
+      'manyToOne',
       'api::competition.competition'
     >;
     createdAt: Schema.Attribute.DateTime;
@@ -714,6 +767,10 @@ export interface ApiCompetitionResultCompetitionResult
     batch: Schema.Attribute.Relation<
       'oneToOne',
       'api::competition-batch.competition-batch'
+    >;
+    competition: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::competition.competition'
     >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -754,6 +811,10 @@ export interface ApiCompetitionCompetition extends Struct.CollectionTypeSchema {
   };
   attributes: {
     activity: Schema.Attribute.Relation<'oneToOne', 'api::activity.activity'>;
+    categories: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::competition-category.competition-category'
+    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -769,7 +830,15 @@ export interface ApiCompetitionCompetition extends Struct.CollectionTypeSchema {
       'api::competition.competition'
     > &
       Schema.Attribute.Private;
+    models: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::competition-model.competition-model'
+    >;
     publishedAt: Schema.Attribute.DateTime;
+    results: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::competition-result.competition-result'
+    >;
     type: Schema.Attribute.Enumeration<
       ['classicByOrder', 'classicByPoints', 'criteriaByCategory']
     > &
@@ -796,7 +865,7 @@ export interface ApiEventAssistantEventAssistant
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    event: Schema.Attribute.Relation<'oneToOne', 'api::event.event'>;
+    event: Schema.Attribute.Relation<'manyToOne', 'api::event.event'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -807,7 +876,40 @@ export interface ApiEventAssistantEventAssistant
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiEventCategoryEventCategory
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'event_categories';
+  info: {
+    displayName: 'EventCategory';
+    pluralName: 'event-categories';
+    singularName: 'event-category';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    description: Schema.Attribute.String & Schema.Attribute.Required;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::event-category.event-category'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -827,7 +929,7 @@ export interface ApiEventCollaboratorEventCollaborator
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
     description: Schema.Attribute.String;
-    event: Schema.Attribute.Relation<'oneToOne', 'api::event.event'>;
+    event: Schema.Attribute.Relation<'manyToOne', 'api::event.event'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -840,43 +942,10 @@ export interface ApiEventCollaboratorEventCollaborator
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
-  };
-}
-
-export interface ApiEventTypeEventType extends Struct.CollectionTypeSchema {
-  collectionName: 'event_types';
-  info: {
-    displayName: 'ActivityType';
-    pluralName: 'event-types';
-    singularName: 'event-type';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    decription: Schema.Attribute.String;
-    isActive: Schema.Attribute.Boolean &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<true>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::event-type.event-type'
-    > &
-      Schema.Attribute.Private;
-    name: Schema.Attribute.Enumeration<
-      ['tournament', 'competition', 'workshop', 'meeting', 'other']
-    > &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'other'>;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
+    users: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -891,8 +960,23 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
+    activities: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::activity.activity'
+    >;
     address: Schema.Attribute.Component<'place.address', false>;
-    adminUser: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
+    assistants: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::event-assistant.event-assistant'
+    >;
+    category: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::event-category.event-category'
+    >;
+    collaborators: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::event-collaborator.event-collaborator'
+    >;
     cost: Schema.Attribute.Decimal;
     costType: Schema.Attribute.Enumeration<['free', 'paid']> &
       Schema.Attribute.Required &
@@ -911,7 +995,9 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::event.event'> &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
+    news: Schema.Attribute.Relation<'oneToMany', 'api::new.new'>;
     publishedAt: Schema.Attribute.DateTime;
+    shortDescription: Schema.Attribute.String & Schema.Attribute.Required;
     socialNetworks: Schema.Attribute.Component<'social.network', true>;
     startDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
@@ -931,7 +1017,6 @@ export interface ApiModelModel extends Struct.CollectionTypeSchema {
     draftAndPublish: false;
   };
   attributes: {
-    code: Schema.Attribute.UID;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -942,10 +1027,14 @@ export interface ApiModelModel extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
+    references: Schema.Attribute.Component<'social.network', true>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
+      'plugin::users-permissions.user'
+    >;
   };
 }
 
@@ -960,12 +1049,11 @@ export interface ApiNewNew extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    adminUser: Schema.Attribute.Relation<'oneToOne', 'admin::user'>;
     content: Schema.Attribute.RichText & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    event: Schema.Attribute.Relation<'oneToOne', 'api::event.event'>;
+    event: Schema.Attribute.Relation<'manyToOne', 'api::event.event'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<'oneToMany', 'api::new.new'> &
       Schema.Attribute.Private;
@@ -1457,6 +1545,7 @@ export interface PluginUsersPermissionsUser
       'plugin::users-permissions.user'
     > &
       Schema.Attribute.Private;
+    models: Schema.Attribute.Relation<'oneToMany', 'api::model.model'>;
     password: Schema.Attribute.Password &
       Schema.Attribute.Private &
       Schema.Attribute.SetMinMaxLength<{
@@ -1494,6 +1583,7 @@ declare module '@strapi/strapi' {
       'admin::transfer-token': AdminTransferToken;
       'admin::transfer-token-permission': AdminTransferTokenPermission;
       'admin::user': AdminUser;
+      'api::activity-category.activity-category': ApiActivityCategoryActivityCategory;
       'api::activity-collaborator.activity-collaborator': ApiActivityCollaboratorActivityCollaborator;
       'api::activity-participant.activity-participant': ApiActivityParticipantActivityParticipant;
       'api::activity.activity': ApiActivityActivity;
@@ -1504,8 +1594,8 @@ declare module '@strapi/strapi' {
       'api::competition-result.competition-result': ApiCompetitionResultCompetitionResult;
       'api::competition.competition': ApiCompetitionCompetition;
       'api::event-assistant.event-assistant': ApiEventAssistantEventAssistant;
+      'api::event-category.event-category': ApiEventCategoryEventCategory;
       'api::event-collaborator.event-collaborator': ApiEventCollaboratorEventCollaborator;
-      'api::event-type.event-type': ApiEventTypeEventType;
       'api::event.event': ApiEventEvent;
       'api::model.model': ApiModelModel;
       'api::new.new': ApiNewNew;

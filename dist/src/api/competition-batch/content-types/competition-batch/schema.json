@@ -43,8 +43,9 @@
         },
         "category": {
             "type": "relation",
-            "relation": "oneToOne",
-            "target": "api::competition-category.competition-category"
+            "relation": "manyToOne",
+            "target": "api::competition-category.competition-category",
+            "inversedBy": "batches"
         }
     }
 }

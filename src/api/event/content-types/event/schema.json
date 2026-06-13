@@ -20,6 +20,15 @@
       "type": "string",
       "required": true
     },
+    "shortDescription": {
+      "type": "string",
+      "required": true
+    },
+    "category": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::event-category.event-category"
+    },
     "description": {
       "type": "richtext",
       "required": true
@@ -32,6 +41,14 @@
         "files"
       ]
     },
+    "startDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "endDate": {
+      "type": "datetime",
+      "required": true
+    },
     "costType": {
       "type": "enumeration",
       "required": true,
@@ -43,14 +60,6 @@
     },
     "cost": {
       "type": "decimal"
-    },
-    "startDate": {
-      "type": "datetime",
-      "required": true
-    },
-    "endDate": {
-      "type": "datetime",
-      "required": true
     },
     "likes": {
       "type": "biginteger",

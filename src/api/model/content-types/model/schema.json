@@ -11,6 +11,12 @@
   },
   "pluginOptions": {},
   "attributes": {
+    "user": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "plugin::users-permissions.user",
+      "inversedBy": "models"
+    },
     "name": {
       "type": "string",
       "required": true
@@ -26,14 +32,10 @@
         "files"
       ]
     },
-    "code": {
-      "type": "uid"
-    },
-    "user": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "plugin::users-permissions.user",
-      "inversedBy": "models"
+    "references": {
+      "type": "component",
+      "component": "social.network",
+      "repeatable": true
     }
   }
 }
