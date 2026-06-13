@@ -19,7 +19,7 @@
             "type": "richtext",
             "required": true
         },
-        "activityImage": {
+        "image": {
             "type": "media",
             "multiple": false,
             "allowedTypes": [

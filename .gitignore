@@ -4,6 +4,8 @@
 ### Strapi ###
 
 .env
+.env.prod
+.env.test
 license.txt
 exports
 *.cache
