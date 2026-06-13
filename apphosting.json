@@ -1,0 +1,9 @@
+{
+  "apphosting": {
+    "rootDir": "."
+  },
+  "runConfig": {
+    "buildCommand": "npm run build",
+    "startCommand": "npm run start"
+  }
+}
