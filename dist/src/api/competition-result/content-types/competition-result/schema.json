@@ -17,6 +17,11 @@
         "totalPoints": {
             "type": "integer"
         },
+        "evaluations": {
+            "type": "component",
+            "component": "competition.evaluation",
+            "repeatable": true
+        },
         "model": {
             "type": "relation",
             "relation": "oneToOne",
@@ -32,10 +37,11 @@
             "relation": "oneToOne",
             "target": "api::competition-batch.competition-batch"
         },
-        "evaluations": {
-            "type": "component",
-            "component": "competition.evaluation",
-            "repeatable": true
+        "competition": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "api::competition.competition",
+            "inversedBy": "results"
         }
     }
 }

@@ -13,8 +13,9 @@
     "attributes": {
         "competition": {
             "type": "relation",
-            "relation": "oneToOne",
-            "target": "api::competition.competition"
+            "relation": "manyToOne",
+            "target": "api::competition.competition",
+            "inversedBy": "models"
         },
         "model": {
             "type": "relation",

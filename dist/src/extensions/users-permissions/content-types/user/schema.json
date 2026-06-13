@@ -81,6 +81,12 @@
             "type": "component",
             "component": "social.network",
             "repeatable": true
+        },
+        "models": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::model.model",
+            "mappedBy": "user"
         }
     }
 }

@@ -19,7 +19,7 @@
       "type": "richtext",
       "required": true
     },
-    "activityImage": {
+    "image": {
       "type": "media",
       "multiple": false,
       "allowedTypes": [
@@ -52,13 +52,21 @@
     },
     "event": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::event.event"
+      "relation": "manyToOne",
+      "target": "api::event.event",
+      "inversedBy": "activities"
     },
-    "adminUser": {
+    "collaborators": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "admin::user"
+      "relation": "oneToMany",
+      "target": "api::activity-collaborator.activity-collaborator",
+      "mappedBy": "activity"
+    },
+    "participants": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::activity-participant.activity-participant",
+      "mappedBy": "activity"
     }
   }
 }

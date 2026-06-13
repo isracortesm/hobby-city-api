@@ -24,13 +24,14 @@
     },
     "event": {
       "type": "relation",
-      "relation": "oneToOne",
-      "target": "api::event.event"
+      "relation": "manyToOne",
+      "target": "api::event.event",
+      "inversedBy": "collaborators"
     },
-    "user": {
+    "users": {
       "type": "relation",
       "relation": "oneToOne",
-      "target": "admin::user"
+      "target": "plugin::users-permissions.user"
     }
   }
 }

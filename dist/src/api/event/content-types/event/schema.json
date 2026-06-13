@@ -24,6 +24,14 @@
             "type": "richtext",
             "required": true
         },
+        "image": {
+            "type": "media",
+            "multiple": false,
+            "allowedTypes": [
+                "images",
+                "files"
+            ]
+        },
         "costType": {
             "type": "enumeration",
             "required": true,
@@ -49,11 +57,6 @@
             "required": true,
             "default": "0"
         },
-        "adminUser": {
-            "type": "relation",
-            "relation": "oneToOne",
-            "target": "admin::user"
-        },
         "socialNetworks": {
             "type": "component",
             "component": "social.network",
@@ -63,6 +66,30 @@
             "type": "component",
             "component": "place.address",
             "repeatable": false
+        },
+        "news": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::new.new",
+            "mappedBy": "event"
+        },
+        "activities": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::activity.activity",
+            "mappedBy": "event"
+        },
+        "collaborators": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::event-collaborator.event-collaborator",
+            "mappedBy": "event"
+        },
+        "assistants": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::event-assistant.event-assistant",
+            "mappedBy": "event"
         }
     }
 }
