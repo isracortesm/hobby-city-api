@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-06-13T20:09:11.588Z"
+    "x-generation-date": "2026-06-14T03:02:46.720Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -11035,6 +11035,9 @@
               "shortDescription": {
                 "type": "string"
               },
+              "description": {
+                "type": "string"
+              },
               "category": {
                 "type": "object",
                 "properties": {
@@ -11130,9 +11133,6 @@
                     }
                   }
                 }
-              },
-              "description": {
-                "type": "string"
               },
               "image": {
                 "type": "object",
@@ -11358,6 +11358,9 @@
                       "type": "string"
                     },
                     "title": {
+                      "type": "string"
+                    },
+                    "subtitle": {
                       "type": "string"
                     },
                     "content": {
@@ -15927,6 +15930,9 @@
                   "shortDescription": {
                     "type": "string"
                   },
+                  "description": {
+                    "type": "string"
+                  },
                   "category": {
                     "type": "object",
                     "properties": {
@@ -16022,9 +16028,6 @@
                         }
                       }
                     }
-                  },
-                  "description": {
-                    "type": "string"
                   },
                   "image": {
                     "type": "object",
@@ -16250,6 +16253,9 @@
                           "type": "string"
                         },
                         "title": {
+                          "type": "string"
+                        },
+                        "subtitle": {
                           "type": "string"
                         },
                         "content": {
@@ -19562,6 +19568,9 @@
                   "shortDescription": {
                     "type": "string"
                   },
+                  "description": {
+                    "type": "string"
+                  },
                   "category": {
                     "type": "object",
                     "properties": {
@@ -19657,9 +19666,6 @@
                         }
                       }
                     }
-                  },
-                  "description": {
-                    "type": "string"
                   },
                   "image": {
                     "type": "object",
@@ -19885,6 +19891,9 @@
                           "type": "string"
                         },
                         "title": {
+                          "type": "string"
+                        },
+                        "subtitle": {
                           "type": "string"
                         },
                         "content": {
@@ -23238,6 +23247,9 @@
                   "shortDescription": {
                     "type": "string"
                   },
+                  "description": {
+                    "type": "string"
+                  },
                   "category": {
                     "type": "object",
                     "properties": {
@@ -23333,9 +23345,6 @@
                         }
                       }
                     }
-                  },
-                  "description": {
-                    "type": "string"
                   },
                   "image": {
                     "type": "object",
@@ -23561,6 +23570,9 @@
                           "type": "string"
                         },
                         "title": {
+                          "type": "string"
+                        },
+                        "subtitle": {
                           "type": "string"
                         },
                         "content": {
@@ -28145,6 +28157,9 @@
                           "shortDescription": {
                             "type": "string"
                           },
+                          "description": {
+                            "type": "string"
+                          },
                           "category": {
                             "type": "object",
                             "properties": {
@@ -28240,9 +28255,6 @@
                                 }
                               }
                             }
-                          },
-                          "description": {
-                            "type": "string"
                           },
                           "image": {
                             "type": "object",
@@ -28468,6 +28480,9 @@
                                   "type": "string"
                                 },
                                 "title": {
+                                  "type": "string"
+                                },
+                                "subtitle": {
                                   "type": "string"
                                 },
                                 "content": {
@@ -32712,6 +32727,9 @@
                       "shortDescription": {
                         "type": "string"
                       },
+                      "description": {
+                        "type": "string"
+                      },
                       "category": {
                         "type": "object",
                         "properties": {
@@ -32807,9 +32825,6 @@
                             }
                           }
                         }
-                      },
-                      "description": {
-                        "type": "string"
                       },
                       "image": {
                         "type": "object",
@@ -33035,6 +33050,9 @@
                               "type": "string"
                             },
                             "title": {
+                              "type": "string"
+                            },
+                            "subtitle": {
                               "type": "string"
                             },
                             "content": {
@@ -37345,6 +37363,9 @@
                           "shortDescription": {
                             "type": "string"
                           },
+                          "description": {
+                            "type": "string"
+                          },
                           "category": {
                             "type": "object",
                             "properties": {
@@ -37440,9 +37461,6 @@
                                 }
                               }
                             }
-                          },
-                          "description": {
-                            "type": "string"
                           },
                           "image": {
                             "type": "object",
@@ -37668,6 +37686,9 @@
                                   "type": "string"
                                 },
                                 "title": {
+                                  "type": "string"
+                                },
+                                "subtitle": {
                                   "type": "string"
                                 },
                                 "content": {
@@ -41888,6 +41909,9 @@
                       "shortDescription": {
                         "type": "string"
                       },
+                      "description": {
+                        "type": "string"
+                      },
                       "category": {
                         "type": "object",
                         "properties": {
@@ -41983,9 +42007,6 @@
                             }
                           }
                         }
-                      },
-                      "description": {
-                        "type": "string"
                       },
                       "image": {
                         "type": "object",
@@ -42211,6 +42232,9 @@
                               "type": "string"
                             },
                             "title": {
+                              "type": "string"
+                            },
+                            "subtitle": {
                               "type": "string"
                             },
                             "content": {
@@ -46540,6 +46564,9 @@
                           "shortDescription": {
                             "type": "string"
                           },
+                          "description": {
+                            "type": "string"
+                          },
                           "category": {
                             "type": "object",
                             "properties": {
@@ -46635,9 +46662,6 @@
                                 }
                               }
                             }
-                          },
-                          "description": {
-                            "type": "string"
                           },
                           "image": {
                             "type": "object",
@@ -46863,6 +46887,9 @@
                                   "type": "string"
                                 },
                                 "title": {
+                                  "type": "string"
+                                },
+                                "subtitle": {
                                   "type": "string"
                                 },
                                 "content": {
@@ -49748,6 +49775,9 @@
               "shortDescription": {
                 "type": "string"
               },
+              "description": {
+                "type": "string"
+              },
               "category": {
                 "oneOf": [
                   {
@@ -49758,9 +49788,6 @@
                   }
                 ],
                 "example": "string or id"
-              },
-              "description": {
-                "type": "string"
               },
               "image": {
                 "oneOf": [
@@ -49951,6 +49978,9 @@
             "type": "string"
           },
           "shortDescription": {
+            "type": "string"
+          },
+          "description": {
             "type": "string"
           },
           "category": {
@@ -50696,9 +50726,6 @@
               }
             }
           },
-          "description": {
-            "type": "string"
-          },
           "image": {
             "type": "object",
             "properties": {
@@ -51220,6 +51247,9 @@
                 "title": {
                   "type": "string"
                 },
+                "subtitle": {
+                  "type": "string"
+                },
                 "content": {
                   "type": "string"
                 },
@@ -51423,6 +51453,9 @@
                     "shortDescription": {
                       "type": "string"
                     },
+                    "description": {
+                      "type": "string"
+                    },
                     "category": {
                       "type": "object",
                       "properties": {
@@ -51440,9 +51473,6 @@
                           "type": "string"
                         }
                       }
-                    },
-                    "description": {
-                      "type": "string"
                     },
                     "image": {
                       "type": "object",
@@ -53867,6 +53897,9 @@
               "shortDescription": {
                 "type": "string"
               },
+              "description": {
+                "type": "string"
+              },
               "category": {
                 "type": "object",
                 "properties": {
@@ -54610,9 +54643,6 @@
                   }
                 }
               },
-              "description": {
-                "type": "string"
-              },
               "image": {
                 "type": "object",
                 "properties": {
@@ -55132,6 +55162,9 @@
                       "type": "string"
                     },
                     "title": {
+                      "type": "string"
+                    },
+                    "subtitle": {
                       "type": "string"
                     },
                     "content": {
@@ -58411,6 +58444,9 @@
               "shortDescription": {
                 "type": "string"
               },
+              "description": {
+                "type": "string"
+              },
               "category": {
                 "type": "object",
                 "properties": {
@@ -59154,9 +59190,6 @@
                   }
                 }
               },
-              "description": {
-                "type": "string"
-              },
               "image": {
                 "type": "object",
                 "properties": {
@@ -59676,6 +59709,9 @@
                       "type": "string"
                     },
                     "title": {
+                      "type": "string"
+                    },
+                    "subtitle": {
                       "type": "string"
                     },
                     "content": {
@@ -64053,12 +64089,16 @@
           "data": {
             "required": [
               "title",
+              "subtitle",
               "content",
               "order"
             ],
             "type": "object",
             "properties": {
               "title": {
+                "type": "string"
+              },
+              "subtitle": {
                 "type": "string"
               },
               "content": {
@@ -64149,6 +64189,7 @@
         "type": "object",
         "required": [
           "title",
+          "subtitle",
           "content",
           "order"
         ],
@@ -64167,6 +64208,9 @@
             "type": "string"
           },
           "title": {
+            "type": "string"
+          },
+          "subtitle": {
             "type": "string"
           },
           "content": {
@@ -65314,6 +65358,9 @@
               "shortDescription": {
                 "type": "string"
               },
+              "description": {
+                "type": "string"
+              },
               "category": {
                 "type": "object",
                 "properties": {
@@ -65409,9 +65456,6 @@
                     }
                   }
                 }
-              },
-              "description": {
-                "type": "string"
               },
               "image": {
                 "type": "object",
@@ -65637,6 +65681,9 @@
                       "type": "string"
                     },
                     "title": {
+                      "type": "string"
+                    },
+                    "subtitle": {
                       "type": "string"
                     },
                     "content": {

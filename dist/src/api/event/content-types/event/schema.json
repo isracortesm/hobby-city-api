@@ -24,14 +24,14 @@
             "type": "string",
             "required": true
         },
+        "description": {
+            "type": "richtext",
+            "required": true
+        },
         "category": {
             "type": "relation",
             "relation": "oneToOne",
             "target": "api::event-category.event-category"
-        },
-        "description": {
-            "type": "richtext",
-            "required": true
         },
         "image": {
             "type": "media",
