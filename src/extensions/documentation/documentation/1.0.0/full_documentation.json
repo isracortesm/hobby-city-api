@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-06-14T03:02:46.720Z"
+    "x-generation-date": "2026-06-17T18:55:23.425Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -13540,7 +13540,7 @@
               "email",
               "instagram",
               "puttyandpaint",
-              "fracebook",
+              "facebook",
               "pinterest",
               "twitter",
               "tiktok",
