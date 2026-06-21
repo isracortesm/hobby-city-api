@@ -35,12 +35,6 @@
       "relation": "oneToOne",
       "target": "api::activity.activity"
     },
-    "categories": {
-      "type": "relation",
-      "relation": "oneToMany",
-      "target": "api::competition-category.competition-category",
-      "mappedBy": "competition"
-    },
     "models": {
       "type": "relation",
       "relation": "oneToMany",
@@ -51,6 +45,12 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::competition-result.competition-result",
+      "mappedBy": "competition"
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::competition-category.competition-category",
       "mappedBy": "competition"
     }
   }

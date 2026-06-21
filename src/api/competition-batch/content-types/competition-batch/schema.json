@@ -24,6 +24,9 @@
         "none"
       ]
     },
+    "codeName": {
+      "type": "string"
+    },
     "batchName": {
       "type": "string",
       "required": true
@@ -40,12 +43,6 @@
       "type": "integer",
       "required": false,
       "default": 0
-    },
-    "category": {
-      "type": "relation",
-      "relation": "manyToOne",
-      "target": "api::competition-category.competition-category",
-      "inversedBy": "batches"
     }
   }
 }

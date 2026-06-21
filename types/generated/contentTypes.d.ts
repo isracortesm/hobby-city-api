@@ -618,10 +618,7 @@ export interface ApiCompetitionBatchCompetitionBatch
       Schema.Attribute.DefaultTo<'none'>;
     batchImage: Schema.Attribute.Media<'images' | 'files'>;
     batchName: Schema.Attribute.String & Schema.Attribute.Required;
-    category: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::competition-category.competition-category'
-    >;
+    codeName: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -693,10 +690,7 @@ export interface ApiCompetitionCriteriaCompetitionCriteria
     draftAndPublish: false;
   };
   attributes: {
-    category: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::competition-category.competition-category'
-    >;
+    codeName: Schema.Attribute.String;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
