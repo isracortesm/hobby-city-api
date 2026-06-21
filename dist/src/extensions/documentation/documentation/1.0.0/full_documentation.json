@@ -14,7 +14,7 @@
             "name": "Apache 2.0",
             "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        "x-generation-date": "2026-06-21T03:34:50.054Z"
+        "x-generation-date": "2026-06-21T04:13:24.463Z"
     },
     "x-strapi-config": {
         "plugins": [
@@ -26662,6 +26662,7 @@
                     "data": {
                         "required": [
                             "batch",
+                            "codeName",
                             "batchName"
                         ],
                         "type": "object",
@@ -26757,6 +26758,7 @@
                 "type": "object",
                 "required": [
                     "batch",
+                    "codeName",
                     "batchName"
                 ],
                 "properties": {
@@ -32910,6 +32912,7 @@
                 "properties": {
                     "data": {
                         "required": [
+                            "codeName",
                             "name",
                             "maxPoints"
                         ],
@@ -32986,6 +32989,7 @@
             "CompetitionCriteria": {
                 "type": "object",
                 "required": [
+                    "codeName",
                     "name",
                     "maxPoints"
                 ],

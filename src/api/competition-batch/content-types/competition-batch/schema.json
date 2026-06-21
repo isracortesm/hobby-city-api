@@ -25,7 +25,8 @@
       ]
     },
     "codeName": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "batchName": {
       "type": "string",

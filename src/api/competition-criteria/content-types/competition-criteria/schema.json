@@ -12,7 +12,8 @@
   "pluginOptions": {},
   "attributes": {
     "codeName": {
-      "type": "string"
+      "type": "string",
+      "required": true
     },
     "name": {
       "type": "string",
