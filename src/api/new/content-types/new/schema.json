@@ -36,6 +36,11 @@
       "required": true,
       "default": 0
     },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
     "event": {
       "type": "relation",
       "relation": "manyToOne",
