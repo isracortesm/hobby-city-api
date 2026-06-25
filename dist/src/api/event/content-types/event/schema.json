@@ -103,7 +103,7 @@
             "target": "api::event-assistant.event-assistant",
             "mappedBy": "event"
         },
-        "socialNetwoks": {
+        "socialNetworks": {
             "type": "relation",
             "relation": "oneToMany",
             "target": "api::event-netwok.event-netwok",

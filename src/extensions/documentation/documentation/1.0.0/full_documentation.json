@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-06-25T00:49:47.576Z"
+    "x-generation-date": "2026-06-25T01:05:23.535Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -15134,7 +15134,7 @@
                   }
                 }
               },
-              "socialNetwoks": {
+              "socialNetworks": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -19826,7 +19826,7 @@
                       }
                     }
                   },
-                  "socialNetwoks": {
+                  "socialNetworks": {
                     "type": "array",
                     "items": {
                       "type": "object",
@@ -23887,7 +23887,7 @@
                       }
                     }
                   },
-                  "socialNetwoks": {
+                  "socialNetworks": {
                     "type": "array",
                     "items": {
                       "type": "object",
@@ -27989,7 +27989,7 @@
                       }
                     }
                   },
-                  "socialNetwoks": {
+                  "socialNetworks": {
                     "type": "array",
                     "items": {
                       "type": "object",
@@ -35086,7 +35086,7 @@
                           }
                         }
                       },
-                      "socialNetwoks": {
+                      "socialNetworks": {
                         "type": "array",
                         "items": {
                           "type": "object",
@@ -40630,7 +40630,7 @@
                           }
                         }
                       },
-                      "socialNetwoks": {
+                      "socialNetworks": {
                         "type": "array",
                         "items": {
                           "type": "object",
@@ -45678,7 +45678,7 @@
                               }
                             }
                           },
-                          "socialNetwoks": {
+                          "socialNetworks": {
                             "type": "array",
                             "items": {
                               "type": "object",
@@ -47418,7 +47418,7 @@
                   "example": "string or id"
                 }
               },
-              "socialNetwoks": {
+              "socialNetworks": {
                 "type": "array",
                 "items": {
                   "oneOf": [
@@ -51312,7 +51312,7 @@
                         }
                       }
                     },
-                    "socialNetwoks": {
+                    "socialNetworks": {
                       "type": "array",
                       "items": {
                         "type": "object",
@@ -51657,7 +51657,7 @@
               }
             }
           },
-          "socialNetwoks": {
+          "socialNetworks": {
             "type": "array",
             "items": {
               "type": "object",
@@ -55494,7 +55494,7 @@
                   }
                 }
               },
-              "socialNetwoks": {
+              "socialNetworks": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -60464,7 +60464,7 @@
                   }
                 }
               },
-              "socialNetwoks": {
+              "socialNetworks": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -64540,7 +64540,7 @@
                   }
                 }
               },
-              "socialNetwoks": {
+              "socialNetworks": {
                 "type": "array",
                 "items": {
                   "type": "object",
@@ -73472,7 +73472,7 @@
                   }
                 }
               },
-              "socialNetwoks": {
+              "socialNetworks": {
                 "type": "array",
                 "items": {
                   "type": "object",

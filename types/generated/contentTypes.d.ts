@@ -1040,7 +1040,7 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     news: Schema.Attribute.Relation<'oneToMany', 'api::new.new'>;
     publishedAt: Schema.Attribute.DateTime;
     shortDescription: Schema.Attribute.String & Schema.Attribute.Required;
-    socialNetwoks: Schema.Attribute.Relation<
+    socialNetworks: Schema.Attribute.Relation<
       'oneToMany',
       'api::event-netwok.event-netwok'
     >;
