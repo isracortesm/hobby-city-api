@@ -994,7 +994,6 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     news: Schema.Attribute.Relation<'oneToMany', 'api::new.new'>;
     publishedAt: Schema.Attribute.DateTime;
     shortDescription: Schema.Attribute.String & Schema.Attribute.Required;
-    socialNetworks: Schema.Attribute.Component<'social.network', true>;
     startDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1003,6 +1002,53 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
       'oneToOne',
       'plugin::users-permissions.user'
     >;
+  };
+}
+
+export interface ApiModelReferenceModelReference
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'model_references';
+  info: {
+    displayName: 'ModelReference';
+    pluralName: 'model-references';
+    singularName: 'model-reference';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::model-reference.model-reference'
+    > &
+      Schema.Attribute.Private;
+    model: Schema.Attribute.Relation<'manyToOne', 'api::model.model'>;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    type: Schema.Attribute.Enumeration<
+      [
+        'email',
+        'instagram',
+        'puttyandpaint',
+        'facebook',
+        'pinterest',
+        'twitter',
+        'tiktok',
+        'artstation',
+        'web',
+        'linktree',
+        'other',
+      ]
+    > &
+      Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    url: Schema.Attribute.String & Schema.Attribute.Required;
   };
 }
 
@@ -1027,7 +1073,10 @@ export interface ApiModelModel extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     publishedAt: Schema.Attribute.DateTime;
-    references: Schema.Attribute.Component<'social.network', true>;
+    references: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::model-reference.model-reference'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1069,6 +1118,55 @@ export interface ApiNewNew extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     user: Schema.Attribute.Relation<
       'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
+export interface ApiUserNetworkUserNetwork extends Struct.CollectionTypeSchema {
+  collectionName: 'user_networks';
+  info: {
+    displayName: 'UserNetwork';
+    pluralName: 'user-networks';
+    singularName: 'user-network';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::user-network.user-network'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    type: Schema.Attribute.Enumeration<
+      [
+        'email',
+        'instagram',
+        'puttyandpaint',
+        'facebook',
+        'pinterest',
+        'twitter',
+        'tiktok',
+        'artstation',
+        'web',
+        'linktree',
+        'other',
+      ]
+    > &
+      Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    url: Schema.Attribute.String & Schema.Attribute.Required;
+    user: Schema.Attribute.Relation<
+      'manyToOne',
       'plugin::users-permissions.user'
     >;
   };
@@ -1564,7 +1662,10 @@ export interface PluginUsersPermissionsUser
       'manyToOne',
       'plugin::users-permissions.role'
     >;
-    socialNetworks: Schema.Attribute.Component<'social.network', true>;
+    socialNetworks: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::user-network.user-network'
+    >;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1602,8 +1703,10 @@ declare module '@strapi/strapi' {
       'api::event-category.event-category': ApiEventCategoryEventCategory;
       'api::event-collaborator.event-collaborator': ApiEventCollaboratorEventCollaborator;
       'api::event.event': ApiEventEvent;
+      'api::model-reference.model-reference': ApiModelReferenceModelReference;
       'api::model.model': ApiModelModel;
       'api::new.new': ApiNewNew;
+      'api::user-network.user-network': ApiUserNetworkUserNetwork;
       'plugin::content-releases.release': PluginContentReleasesRelease;
       'plugin::content-releases.release-action': PluginContentReleasesReleaseAction;
       'plugin::i18n.locale': PluginI18NLocale;

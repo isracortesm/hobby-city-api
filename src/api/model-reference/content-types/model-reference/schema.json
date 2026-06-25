@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "model_references",
+  "info": {
+    "singularName": "model-reference",
+    "pluralName": "model-references",
+    "displayName": "ModelReference"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "email",
+        "instagram",
+        "puttyandpaint",
+        "facebook",
+        "pinterest",
+        "twitter",
+        "tiktok",
+        "artstation",
+        "web",
+        "linktree",
+        "other"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "model": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::model.model",
+      "inversedBy": "references"
+    }
+  }
+}

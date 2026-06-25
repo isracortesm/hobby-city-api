@@ -1,0 +1,46 @@
+{
+    "kind": "collectionType",
+    "collectionName": "user_networks",
+    "info": {
+        "singularName": "user-network",
+        "pluralName": "user-networks",
+        "displayName": "UserNetwork"
+    },
+    "options": {
+        "draftAndPublish": false
+    },
+    "pluginOptions": {},
+    "attributes": {
+        "type": {
+            "type": "enumeration",
+            "required": true,
+            "enum": [
+                "email",
+                "instagram",
+                "puttyandpaint",
+                "facebook",
+                "pinterest",
+                "twitter",
+                "tiktok",
+                "artstation",
+                "web",
+                "linktree",
+                "other"
+            ]
+        },
+        "name": {
+            "type": "string",
+            "required": true
+        },
+        "url": {
+            "type": "string",
+            "required": true
+        },
+        "user": {
+            "type": "relation",
+            "relation": "manyToOne",
+            "target": "plugin::users-permissions.user",
+            "inversedBy": "socialNetworks"
+        }
+    }
+}

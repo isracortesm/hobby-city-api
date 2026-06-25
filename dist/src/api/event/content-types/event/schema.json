@@ -69,11 +69,6 @@
             "required": true,
             "default": "0"
         },
-        "socialNetworks": {
-            "type": "component",
-            "component": "social.network",
-            "repeatable": true
-        },
         "address": {
             "type": "component",
             "component": "place.address",

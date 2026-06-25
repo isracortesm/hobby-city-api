@@ -33,9 +33,10 @@
       ]
     },
     "references": {
-      "type": "component",
-      "component": "social.network",
-      "repeatable": true
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::model-reference.model-reference",
+      "mappedBy": "model"
     }
   }
 }
