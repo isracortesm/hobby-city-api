@@ -102,6 +102,12 @@
             "relation": "oneToMany",
             "target": "api::event-assistant.event-assistant",
             "mappedBy": "event"
+        },
+        "socialNetwoks": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::event-netwok.event-netwok",
+            "mappedBy": "event"
         }
     }
 }

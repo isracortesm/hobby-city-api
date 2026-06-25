@@ -944,6 +944,52 @@ export interface ApiEventCollaboratorEventCollaborator
   };
 }
 
+export interface ApiEventNetwokEventNetwok extends Struct.CollectionTypeSchema {
+  collectionName: 'event_netwoks';
+  info: {
+    displayName: 'EventNetwok';
+    pluralName: 'event-netwoks';
+    singularName: 'event-netwok';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    event: Schema.Attribute.Relation<'manyToOne', 'api::event.event'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::event-netwok.event-netwok'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String & Schema.Attribute.Required;
+    publishedAt: Schema.Attribute.DateTime;
+    type: Schema.Attribute.Enumeration<
+      [
+        'email',
+        'instagram',
+        'puttyandpaint',
+        'facebook',
+        'pinterest',
+        'twitter',
+        'tiktok',
+        'artstation',
+        'web',
+        'linktree',
+        'other',
+      ]
+    > &
+      Schema.Attribute.Required;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    url: Schema.Attribute.String & Schema.Attribute.Required;
+  };
+}
+
 export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   collectionName: 'events';
   info: {
@@ -994,6 +1040,10 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
     news: Schema.Attribute.Relation<'oneToMany', 'api::new.new'>;
     publishedAt: Schema.Attribute.DateTime;
     shortDescription: Schema.Attribute.String & Schema.Attribute.Required;
+    socialNetwoks: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::event-netwok.event-netwok'
+    >;
     startDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
@@ -1702,6 +1752,7 @@ declare module '@strapi/strapi' {
       'api::event-assistant.event-assistant': ApiEventAssistantEventAssistant;
       'api::event-category.event-category': ApiEventCategoryEventCategory;
       'api::event-collaborator.event-collaborator': ApiEventCollaboratorEventCollaborator;
+      'api::event-netwok.event-netwok': ApiEventNetwokEventNetwok;
       'api::event.event': ApiEventEvent;
       'api::model-reference.model-reference': ApiModelReferenceModelReference;
       'api::model.model': ApiModelModel;

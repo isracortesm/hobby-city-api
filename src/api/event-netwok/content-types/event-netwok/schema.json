@@ -1,0 +1,46 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_netwoks",
+  "info": {
+    "singularName": "event-netwok",
+    "pluralName": "event-netwoks",
+    "displayName": "EventNetwok"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "type": {
+      "type": "enumeration",
+      "required": true,
+      "enum": [
+        "email",
+        "instagram",
+        "puttyandpaint",
+        "facebook",
+        "pinterest",
+        "twitter",
+        "tiktok",
+        "artstation",
+        "web",
+        "linktree",
+        "other"
+      ]
+    },
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "url": {
+      "type": "string",
+      "required": true
+    },
+    "event": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::event.event",
+      "inversedBy": "socialNetwoks"
+    }
+  }
+}
