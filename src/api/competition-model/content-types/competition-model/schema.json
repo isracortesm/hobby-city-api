@@ -17,6 +17,11 @@
       "target": "api::competition.competition",
       "inversedBy": "models"
     },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    },
     "model": {
       "type": "relation",
       "relation": "oneToOne",

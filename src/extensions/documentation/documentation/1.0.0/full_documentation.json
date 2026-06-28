@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-06-28T17:26:02.651Z"
+    "x-generation-date": "2026-06-28T18:06:41.434Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -29418,6 +29418,24 @@
                     }
                   }
                 },
+                "user": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "oneOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "number"
+                        }
+                      ]
+                    },
+                    "documentId": {
+                      "type": "string"
+                    }
+                  }
+                },
                 "model": {
                   "type": "object",
                   "properties": {
@@ -35709,6 +35727,24 @@
                         }
                       }
                     },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        },
+                        "documentId": {
+                          "type": "string"
+                        }
+                      }
+                    },
                     "model": {
                       "type": "object",
                       "properties": {
@@ -37256,6 +37292,17 @@
             "type": "object",
             "properties": {
               "competition": {
+                "oneOf": [
+                  {
+                    "type": "integer"
+                  },
+                  {
+                    "type": "string"
+                  }
+                ],
+                "example": "string or id"
+              },
+              "user": {
                 "oneOf": [
                   {
                     "type": "integer"
@@ -41256,6 +41303,24 @@
                         }
                       }
                     },
+                    "user": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        },
+                        "documentId": {
+                          "type": "string"
+                        }
+                      }
+                    },
                     "model": {
                       "type": "object",
                       "properties": {
@@ -42122,6 +42187,24 @@
                     }
                   }
                 }
+              }
+            }
+          },
+          "user": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "oneOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              "documentId": {
+                "type": "string"
               }
             }
           },
@@ -47047,6 +47130,24 @@
                         }
                       }
                     }
+                  }
+                }
+              },
+              "user": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "oneOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  "documentId": {
+                    "type": "string"
                   }
                 }
               },
