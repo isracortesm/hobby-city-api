@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-06-25T01:05:23.535Z"
+    "x-generation-date": "2026-06-28T17:26:02.651Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -11117,7 +11117,9 @@
               "description",
               "costType",
               "startDate",
-              "endDate"
+              "endDate",
+              "capacity",
+              "hasActiveRegister"
             ],
             "type": "object",
             "properties": {
@@ -11141,9 +11143,6 @@
                 ],
                 "example": "string or id"
               },
-              "capacity": {
-                "type": "integer"
-              },
               "costType": {
                 "type": "string",
                 "enum": [
@@ -11162,6 +11161,12 @@
               "endDate": {
                 "type": "string",
                 "format": "date-time"
+              },
+              "capacity": {
+                "type": "integer"
+              },
+              "hasActiveRegister": {
+                "type": "boolean"
               },
               "category": {
                 "oneOf": [
@@ -11277,7 +11282,9 @@
           "description",
           "costType",
           "startDate",
-          "endDate"
+          "endDate",
+          "capacity",
+          "hasActiveRegister"
         ],
         "properties": {
           "id": {
@@ -12416,9 +12423,6 @@
               }
             }
           },
-          "capacity": {
-            "type": "integer"
-          },
           "costType": {
             "type": "string",
             "enum": [
@@ -12437,6 +12441,12 @@
           "endDate": {
             "type": "string",
             "format": "date-time"
+          },
+          "capacity": {
+            "type": "integer"
+          },
+          "hasActiveRegister": {
+            "type": "boolean"
           },
           "category": {
             "type": "object",
@@ -14448,9 +14458,6 @@
                         }
                       }
                     },
-                    "capacity": {
-                      "type": "integer"
-                    },
                     "costType": {
                       "type": "string",
                       "enum": [
@@ -14469,6 +14476,12 @@
                     "endDate": {
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "capacity": {
+                      "type": "integer"
+                    },
+                    "hasActiveRegister": {
+                      "type": "boolean"
                     },
                     "category": {
                       "type": "object",
@@ -17700,9 +17713,6 @@
                   }
                 }
               },
-              "capacity": {
-                "type": "integer"
-              },
               "costType": {
                 "type": "string",
                 "enum": [
@@ -17721,6 +17731,12 @@
               "endDate": {
                 "type": "string",
                 "format": "date-time"
+              },
+              "capacity": {
+                "type": "integer"
+              },
+              "hasActiveRegister": {
+                "type": "boolean"
               },
               "category": {
                 "type": "object",
@@ -21761,9 +21777,6 @@
                   }
                 }
               },
-              "capacity": {
-                "type": "integer"
-              },
               "costType": {
                 "type": "string",
                 "enum": [
@@ -21782,6 +21795,12 @@
               "endDate": {
                 "type": "string",
                 "format": "date-time"
+              },
+              "capacity": {
+                "type": "integer"
+              },
+              "hasActiveRegister": {
+                "type": "boolean"
               },
               "category": {
                 "type": "object",
@@ -24562,7 +24581,7 @@
             "required": [
               "type",
               "hasPublicResults",
-              "hasActiveRegister"
+              "modelsLimit"
             ],
             "type": "object",
             "properties": {
@@ -24577,8 +24596,8 @@
               "hasPublicResults": {
                 "type": "boolean"
               },
-              "hasActiveRegister": {
-                "type": "boolean"
+              "modelsLimit": {
+                "type": "integer"
               },
               "activity": {
                 "oneOf": [
@@ -24694,7 +24713,7 @@
         "required": [
           "type",
           "hasPublicResults",
-          "hasActiveRegister"
+          "modelsLimit"
         ],
         "properties": {
           "id": {
@@ -24721,8 +24740,8 @@
           "hasPublicResults": {
             "type": "boolean"
           },
-          "hasActiveRegister": {
-            "type": "boolean"
+          "modelsLimit": {
+            "type": "integer"
           },
           "activity": {
             "type": "object",
@@ -25863,9 +25882,6 @@
                   }
                 }
               },
-              "capacity": {
-                "type": "integer"
-              },
               "costType": {
                 "type": "string",
                 "enum": [
@@ -25884,6 +25900,12 @@
               "endDate": {
                 "type": "string",
                 "format": "date-time"
+              },
+              "capacity": {
+                "type": "integer"
+              },
+              "hasActiveRegister": {
+                "type": "boolean"
               },
               "category": {
                 "type": "object",
@@ -28596,8 +28618,8 @@
                     "hasPublicResults": {
                       "type": "boolean"
                     },
-                    "hasActiveRegister": {
-                      "type": "boolean"
+                    "modelsLimit": {
+                      "type": "integer"
                     },
                     "activity": {
                       "type": "object",
@@ -32760,8 +32782,8 @@
               "hasPublicResults": {
                 "type": "boolean"
               },
-              "hasActiveRegister": {
-                "type": "boolean"
+              "modelsLimit": {
+                "type": "integer"
               },
               "activity": {
                 "type": "object",
@@ -32960,9 +32982,6 @@
                       }
                     }
                   },
-                  "capacity": {
-                    "type": "integer"
-                  },
                   "costType": {
                     "type": "string",
                     "enum": [
@@ -32981,6 +33000,12 @@
                   "endDate": {
                     "type": "string",
                     "format": "date-time"
+                  },
+                  "capacity": {
+                    "type": "integer"
+                  },
+                  "hasActiveRegister": {
+                    "type": "boolean"
                   },
                   "category": {
                     "type": "object",
@@ -37362,8 +37387,8 @@
               "hasPublicResults": {
                 "type": "boolean"
               },
-              "hasActiveRegister": {
-                "type": "boolean"
+              "modelsLimit": {
+                "type": "integer"
               },
               "activity": {
                 "type": "object",
@@ -38504,9 +38529,6 @@
                       }
                     }
                   },
-                  "capacity": {
-                    "type": "integer"
-                  },
                   "costType": {
                     "type": "string",
                     "enum": [
@@ -38525,6 +38547,12 @@
                   "endDate": {
                     "type": "string",
                     "format": "date-time"
+                  },
+                  "capacity": {
+                    "type": "integer"
+                  },
+                  "hasActiveRegister": {
+                    "type": "boolean"
                   },
                   "category": {
                     "type": "object",
@@ -42410,8 +42438,8 @@
                   "hasPublicResults": {
                     "type": "boolean"
                   },
-                  "hasActiveRegister": {
-                    "type": "boolean"
+                  "modelsLimit": {
+                    "type": "integer"
                   },
                   "activity": {
                     "type": "object",
@@ -43552,9 +43580,6 @@
                           }
                         }
                       },
-                      "capacity": {
-                        "type": "integer"
-                      },
                       "costType": {
                         "type": "string",
                         "enum": [
@@ -43573,6 +43598,12 @@
                       "endDate": {
                         "type": "string",
                         "format": "date-time"
+                      },
+                      "capacity": {
+                        "type": "integer"
+                      },
+                      "hasActiveRegister": {
+                        "type": "boolean"
                       },
                       "category": {
                         "type": "object",
@@ -50548,9 +50579,6 @@
                               }
                             }
                           },
-                          "capacity": {
-                            "type": "integer"
-                          },
                           "costType": {
                             "type": "string",
                             "enum": [
@@ -50569,6 +50597,12 @@
                           "endDate": {
                             "type": "string",
                             "format": "date-time"
+                          },
+                          "capacity": {
+                            "type": "integer"
+                          },
+                          "hasActiveRegister": {
+                            "type": "boolean"
                           },
                           "category": {
                             "type": "object",
@@ -54730,9 +54764,6 @@
                         }
                       }
                     },
-                    "capacity": {
-                      "type": "integer"
-                    },
                     "costType": {
                       "type": "string",
                       "enum": [
@@ -54751,6 +54782,12 @@
                     "endDate": {
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "capacity": {
+                      "type": "integer"
+                    },
+                    "hasActiveRegister": {
+                      "type": "boolean"
                     },
                     "category": {
                       "type": "object",
@@ -59700,9 +59737,6 @@
                         }
                       }
                     },
-                    "capacity": {
-                      "type": "integer"
-                    },
                     "costType": {
                       "type": "string",
                       "enum": [
@@ -59721,6 +59755,12 @@
                     "endDate": {
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "capacity": {
+                      "type": "integer"
+                    },
+                    "hasActiveRegister": {
+                      "type": "boolean"
                     },
                     "category": {
                       "type": "object",
@@ -63776,9 +63816,6 @@
                         }
                       }
                     },
-                    "capacity": {
-                      "type": "integer"
-                    },
                     "costType": {
                       "type": "string",
                       "enum": [
@@ -63797,6 +63834,12 @@
                     "endDate": {
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "capacity": {
+                      "type": "integer"
+                    },
+                    "hasActiveRegister": {
+                      "type": "boolean"
                     },
                     "category": {
                       "type": "object",
@@ -72708,9 +72751,6 @@
                         }
                       }
                     },
-                    "capacity": {
-                      "type": "integer"
-                    },
                     "costType": {
                       "type": "string",
                       "enum": [
@@ -72729,6 +72769,12 @@
                     "endDate": {
                       "type": "string",
                       "format": "date-time"
+                    },
+                    "capacity": {
+                      "type": "integer"
+                    },
+                    "hasActiveRegister": {
+                      "type": "boolean"
                     },
                     "category": {
                       "type": "object",

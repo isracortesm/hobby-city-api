@@ -31,9 +31,6 @@
         "files"
       ]
     },
-    "capacity": {
-      "type": "integer"
-    },
     "costType": {
       "type": "enumeration",
       "required": true,
@@ -53,6 +50,16 @@
     "endDate": {
       "type": "datetime",
       "required": true
+    },
+    "capacity": {
+      "type": "integer",
+      "required": true,
+      "default": 0
+    },
+    "hasActiveRegister": {
+      "type": "boolean",
+      "required": true,
+      "default": true
     },
     "category": {
       "type": "relation",

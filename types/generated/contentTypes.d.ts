@@ -559,7 +559,9 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     draftAndPublish: true;
   };
   attributes: {
-    capacity: Schema.Attribute.Integer;
+    capacity: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
     category: Schema.Attribute.Relation<
       'oneToOne',
       'api::activity-category.activity-category'
@@ -578,6 +580,9 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     description: Schema.Attribute.RichText & Schema.Attribute.Required;
     endDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
     event: Schema.Attribute.Relation<'manyToOne', 'api::event.event'>;
+    hasActiveRegister: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<true>;
     image: Schema.Attribute.Media<'images' | 'files'>;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
@@ -813,9 +818,6 @@ export interface ApiCompetitionCompetition extends Struct.CollectionTypeSchema {
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    hasActiveRegister: Schema.Attribute.Boolean &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<true>;
     hasPublicResults: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
@@ -829,6 +831,9 @@ export interface ApiCompetitionCompetition extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::competition-model.competition-model'
     >;
+    modelsLimit: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<5>;
     publishedAt: Schema.Attribute.DateTime;
     results: Schema.Attribute.Relation<
       'oneToMany',
