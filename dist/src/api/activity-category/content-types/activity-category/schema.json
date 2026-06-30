@@ -11,6 +11,15 @@
     },
     "pluginOptions": {},
     "attributes": {
+        "type": {
+            "type": "enumeration",
+            "enum": [
+                "competition",
+                "workshop",
+                "seminar",
+                "tournament"
+            ]
+        },
         "name": {
             "type": "string",
             "required": true

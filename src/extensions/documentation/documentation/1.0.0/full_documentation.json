@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-06-28T18:06:41.434Z"
+    "x-generation-date": "2026-06-29T21:58:41.397Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -12464,6 +12464,15 @@
               "documentId": {
                 "type": "string"
               },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "competition",
+                  "workshop",
+                  "seminar",
+                  "tournament"
+                ]
+              },
               "name": {
                 "type": "string"
               },
@@ -15541,6 +15550,15 @@
             ],
             "type": "object",
             "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "competition",
+                  "workshop",
+                  "seminar",
+                  "tournament"
+                ]
+              },
               "name": {
                 "type": "string"
               },
@@ -15622,6 +15640,15 @@
           },
           "documentId": {
             "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "competition",
+              "workshop",
+              "seminar",
+              "tournament"
+            ]
           },
           "name": {
             "type": "string"
@@ -16344,6 +16371,15 @@
                 },
                 "documentId": {
                   "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "competition",
+                    "workshop",
+                    "seminar",
+                    "tournament"
+                  ]
                 },
                 "name": {
                   "type": "string"
@@ -17753,6 +17789,15 @@
                   },
                   "documentId": {
                     "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "competition",
+                      "workshop",
+                      "seminar",
+                      "tournament"
+                    ]
                   },
                   "name": {
                     "type": "string"
@@ -21817,6 +21862,15 @@
                   },
                   "documentId": {
                     "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "competition",
+                      "workshop",
+                      "seminar",
+                      "tournament"
+                    ]
                   },
                   "name": {
                     "type": "string"
@@ -25922,6 +25976,15 @@
                   },
                   "documentId": {
                     "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "competition",
+                      "workshop",
+                      "seminar",
+                      "tournament"
+                    ]
                   },
                   "name": {
                     "type": "string"
@@ -33041,6 +33104,15 @@
                       "documentId": {
                         "type": "string"
                       },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "competition",
+                          "workshop",
+                          "seminar",
+                          "tournament"
+                        ]
+                      },
                       "name": {
                         "type": "string"
                       },
@@ -38617,6 +38689,15 @@
                       "documentId": {
                         "type": "string"
                       },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "competition",
+                          "workshop",
+                          "seminar",
+                          "tournament"
+                        ]
+                      },
                       "name": {
                         "type": "string"
                       },
@@ -43703,6 +43784,15 @@
                           },
                           "documentId": {
                             "type": "string"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "competition",
+                              "workshop",
+                              "seminar",
+                              "tournament"
+                            ]
                           },
                           "name": {
                             "type": "string"
@@ -50721,6 +50811,15 @@
                               "documentId": {
                                 "type": "string"
                               },
+                              "type": {
+                                "type": "string",
+                                "enum": [
+                                  "competition",
+                                  "workshop",
+                                  "seminar",
+                                  "tournament"
+                                ]
+                              },
                               "name": {
                                 "type": "string"
                               },
@@ -54905,6 +55004,15 @@
                         },
                         "documentId": {
                           "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "competition",
+                            "workshop",
+                            "seminar",
+                            "tournament"
+                          ]
                         },
                         "name": {
                           "type": "string"
@@ -59879,6 +59987,15 @@
                         "documentId": {
                           "type": "string"
                         },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "competition",
+                            "workshop",
+                            "seminar",
+                            "tournament"
+                          ]
+                        },
                         "name": {
                           "type": "string"
                         },
@@ -63957,6 +64074,15 @@
                         },
                         "documentId": {
                           "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "competition",
+                            "workshop",
+                            "seminar",
+                            "tournament"
+                          ]
                         },
                         "name": {
                           "type": "string"
@@ -72892,6 +73018,15 @@
                         },
                         "documentId": {
                           "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "competition",
+                            "workshop",
+                            "seminar",
+                            "tournament"
+                          ]
                         },
                         "name": {
                           "type": "string"
