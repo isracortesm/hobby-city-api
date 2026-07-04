@@ -77,15 +77,16 @@
         "files"
       ]
     },
-    "socialNetworks": {
-      "type": "component",
-      "component": "social.network",
-      "repeatable": true
-    },
     "models": {
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::model.model",
+      "mappedBy": "user"
+    },
+    "socialNetworks": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::user-network.user-network",
       "mappedBy": "user"
     }
   }

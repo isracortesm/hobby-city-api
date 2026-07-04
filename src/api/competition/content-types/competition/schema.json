@@ -25,10 +25,10 @@
       "required": true,
       "default": false
     },
-    "hasActiveRegister": {
-      "type": "boolean",
+    "modelsLimit": {
+      "type": "integer",
       "required": true,
-      "default": true
+      "default": 5
     },
     "activity": {
       "type": "relation",
@@ -45,6 +45,12 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::competition-result.competition-result",
+      "mappedBy": "competition"
+    },
+    "categories": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::competition-category.competition-category",
       "mappedBy": "competition"
     }
   }

@@ -24,6 +24,10 @@
                 "none"
             ]
         },
+        "codeName": {
+            "type": "string",
+            "required": true
+        },
         "batchName": {
             "type": "string",
             "required": true
@@ -40,11 +44,6 @@
             "type": "integer",
             "required": false,
             "default": 0
-        },
-        "category": {
-            "type": "relation",
-            "relation": "oneToOne",
-            "target": "api::competition-category.competition-category"
         }
     }
 }

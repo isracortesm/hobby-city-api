@@ -15,6 +15,10 @@
       "type": "string",
       "required": true
     },
+    "subtitle": {
+      "type": "string",
+      "required": true
+    },
     "content": {
       "type": "richtext",
       "required": true
@@ -31,6 +35,11 @@
       "type": "integer",
       "required": true,
       "default": 0
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     },
     "event": {
       "type": "relation",

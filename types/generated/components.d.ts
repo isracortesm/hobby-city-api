@@ -38,40 +38,12 @@ export interface PlaceGeolocation extends Struct.ComponentSchema {
   };
 }
 
-export interface SocialNetwork extends Struct.ComponentSchema {
-  collectionName: 'components_social_networks';
-  info: {
-    displayName: 'network';
-    icon: 'earth';
-  };
-  attributes: {
-    name: Schema.Attribute.String & Schema.Attribute.Required;
-    type: Schema.Attribute.Enumeration<
-      [
-        'email',
-        'instagram',
-        'fracebook',
-        'pinterest',
-        'x/twitter',
-        'tiktok',
-        'web',
-        'linktree',
-        'other',
-      ]
-    > &
-      Schema.Attribute.Required &
-      Schema.Attribute.DefaultTo<'other'>;
-    url: Schema.Attribute.String & Schema.Attribute.Required;
-  };
-}
-
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
       'competition.evaluation': CompetitionEvaluation;
       'place.address': PlaceAddress;
       'place.geolocation': PlaceGeolocation;
-      'social.network': SocialNetwork;
     }
   }
 }

@@ -20,9 +20,18 @@
       "type": "string",
       "required": true
     },
+    "shortDescription": {
+      "type": "string",
+      "required": true
+    },
     "description": {
       "type": "richtext",
       "required": true
+    },
+    "category": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::event-category.event-category"
     },
     "image": {
       "type": "media",
@@ -31,6 +40,14 @@
         "images",
         "files"
       ]
+    },
+    "startDate": {
+      "type": "datetime",
+      "required": true
+    },
+    "endDate": {
+      "type": "datetime",
+      "required": true
     },
     "costType": {
       "type": "enumeration",
@@ -44,28 +61,23 @@
     "cost": {
       "type": "decimal"
     },
-    "startDate": {
-      "type": "datetime",
-      "required": true
-    },
-    "endDate": {
-      "type": "datetime",
-      "required": true
+    "capacity": {
+      "type": "integer"
     },
     "likes": {
       "type": "biginteger",
       "required": true,
       "default": "0"
     },
-    "socialNetworks": {
-      "type": "component",
-      "component": "social.network",
-      "repeatable": true
-    },
     "address": {
       "type": "component",
       "component": "place.address",
       "repeatable": false
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
     },
     "news": {
       "type": "relation",
@@ -89,6 +101,12 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::event-assistant.event-assistant",
+      "mappedBy": "event"
+    },
+    "socialNetworks": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::event-netwok.event-netwok",
       "mappedBy": "event"
     }
   }

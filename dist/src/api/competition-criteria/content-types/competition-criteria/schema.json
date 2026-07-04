@@ -11,6 +11,10 @@
     },
     "pluginOptions": {},
     "attributes": {
+        "codeName": {
+            "type": "string",
+            "required": true
+        },
         "name": {
             "type": "string",
             "required": true
@@ -21,11 +25,6 @@
         "maxPoints": {
             "type": "integer",
             "required": true
-        },
-        "category": {
-            "type": "relation",
-            "relation": "oneToOne",
-            "target": "api::competition-category.competition-category"
         }
     }
 }

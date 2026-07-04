@@ -11,10 +11,6 @@
     },
     "pluginOptions": {},
     "attributes": {
-        "accessCode": {
-            "type": "uid",
-            "required": true
-        },
         "statusName": {
             "type": "enumeration",
             "required": true,
