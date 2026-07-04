@@ -50,8 +50,7 @@
         "categories": {
             "type": "relation",
             "relation": "oneToMany",
-            "target": "api::competition-category.competition-category",
-            "mappedBy": "competition"
+            "target": "api::competition-category.competition-category"
         }
     }
 }

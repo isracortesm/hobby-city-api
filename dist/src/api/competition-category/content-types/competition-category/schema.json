@@ -27,12 +27,6 @@
             "type": "relation",
             "relation": "oneToMany",
             "target": "api::competition-criteria.competition-criteria"
-        },
-        "competition": {
-            "type": "relation",
-            "relation": "manyToOne",
-            "target": "api::competition.competition",
-            "inversedBy": "categories"
         }
     }
 }
