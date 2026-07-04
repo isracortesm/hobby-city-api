@@ -660,10 +660,6 @@ export interface ApiCompetitionCategoryCompetitionCategory
       'oneToMany',
       'api::competition-batch.competition-batch'
     >;
-    competition: Schema.Attribute.Relation<
-      'manyToOne',
-      'api::competition.competition'
-    >;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
