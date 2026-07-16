@@ -81,31 +81,26 @@ export default {
   },
 
   async beforeDelete(event: any) {
-    const where = event.params?.where;
-    console.log(where)
-    if (!where) return;
+  const where = event.params?.where;
+  if (!where) return;
 
-    let record: any = null;
+  // 1. Obtenemos el registro usando el Query Engine de Strapi.
+  // Acepta tanto id numérico como documentId en el objeto 'where' de forma nativa.
+  const record = await strapi.db
+    .query('api::activity-participant.activity-participant')
+    .findOne({
+      where: where,
+      populate: { activity: true } // El Query Engine sí hace el JOIN directo en BD sin pasar por la lógica i18n/draft de v5
+    });
 
-    if (where.documentId) {
-      record = await strapi
-        .documents('api::activity-participant.activity-participant')
-        .findOne({ documentId: where.documentId, populate: { activity: true } });
-    } else if (where.id) {
-      record = await strapi
-        .documents('api::activity-participant.activity-participant')
-        .findFirst({ filters: { id: where.id }, populate: { activity: true } });
-    }
-
-    console.log(record)
-    if (record?.activity?.documentId) {
-      event.state.activityDocumentId = record.activity.documentId;
-    }
-  },
+  // 2. Si encontró el participante y tiene una actividad vinculada, guardamos su documentId
+  if (record?.activity?.documentId) {
+    event.state.activityDocumentId = record.activity.documentId;
+  }
+},
 
   async afterDelete(event: any) {
     const activityDocumentId = event.state?.activityDocumentId;
-    console.log(activityDocumentId)
     if (!activityDocumentId) return;
 
     await countAndUpdateActivity(strapi, activityDocumentId);
