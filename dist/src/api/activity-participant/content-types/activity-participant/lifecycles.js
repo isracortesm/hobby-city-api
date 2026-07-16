@@ -1,0 +1,104 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const utils_1 = require("@strapi/utils");
+const { ApplicationError } = utils_1.errors;
+function extractNumericId(value) {
+    if (typeof value === 'number')
+        return value;
+    if (typeof value === 'string') {
+        const n = Number(value);
+        if (!Number.isNaN(n))
+            return n;
+    }
+    return null;
+}
+function extractIdFromRelation(data) {
+    var _a, _b;
+    if (!data || typeof data !== 'object')
+        return null;
+    const obj = data;
+    if (Array.isArray(obj.set) && obj.set.length > 0) {
+        return extractNumericId((_a = obj.set[0]) === null || _a === void 0 ? void 0 : _a.id);
+    }
+    if (Array.isArray(obj.connect) && obj.connect.length > 0) {
+        return extractNumericId((_b = obj.connect[0]) === null || _b === void 0 ? void 0 : _b.id);
+    }
+    if ('id' in obj) {
+        return extractNumericId(obj.id);
+    }
+    return extractNumericId(data);
+}
+exports.default = {
+    async beforeCreate(event) {
+        var _a;
+        const relationData = (_a = event.params.data) === null || _a === void 0 ? void 0 : _a.activity;
+        const activityId = extractIdFromRelation(relationData);
+        if (!activityId)
+            return;
+        const activity = await strapi.db
+            .query('api::activity.activity')
+            .findOne({ where: { id: activityId } });
+        if (!activity) {
+            throw new ApplicationError('Activity not found');
+        }
+        if (!activity.publishedAt) {
+            throw new ApplicationError('The activity is not published yet');
+        }
+        if (activity.participantsCount >= activity.capacity && activity.capacity > 0) {
+            throw new ApplicationError('The activity is already full');
+        }
+        event.state.activityId = activityId;
+        event.state.activityDocumentId = activity.documentId;
+    },
+    async afterCreate(event) {
+        var _a;
+        const { activityId, activityDocumentId } = (_a = event.state) !== null && _a !== void 0 ? _a : {};
+        if (!activityId || !activityDocumentId)
+            return;
+        const count = await strapi.db
+            .query('api::activity-participant.activity-participant')
+            .count({ where: { activity: activityId } });
+        for (const status of ['draft', 'published']) {
+            try {
+                await strapi.documents('api::activity.activity').update({
+                    documentId: activityDocumentId,
+                    data: { participantsCount: count },
+                    status,
+                });
+            }
+            catch { /* skip if status doesn't exist */ }
+        }
+    },
+    async beforeDelete(event) {
+        var _a, _b;
+        const where = (_a = event.params) === null || _a === void 0 ? void 0 : _a.where;
+        if (!where)
+            return;
+        const record = await strapi.db
+            .query('api::activity-participant.activity-participant')
+            .findOne({ where, populate: { activity: true } });
+        if ((_b = record === null || record === void 0 ? void 0 : record.activity) === null || _b === void 0 ? void 0 : _b.documentId) {
+            event.state.activityId = record.activity.id;
+            event.state.activityDocumentId = record.activity.documentId;
+        }
+    },
+    async afterDelete(event) {
+        var _a;
+        const { activityId, activityDocumentId } = (_a = event.state) !== null && _a !== void 0 ? _a : {};
+        if (!activityId || !activityDocumentId)
+            return;
+        const count = await strapi.db
+            .query('api::activity-participant.activity-participant')
+            .count({ where: { activity: activityId } });
+        for (const status of ['draft', 'published']) {
+            try {
+                await strapi.documents('api::activity.activity').update({
+                    documentId: activityDocumentId,
+                    data: { participantsCount: count },
+                    status,
+                });
+            }
+            catch { /* skip if status doesn't exist */ }
+        }
+    },
+};

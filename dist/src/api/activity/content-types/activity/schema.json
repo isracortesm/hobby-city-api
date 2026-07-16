@@ -56,6 +56,11 @@
             "required": true,
             "default": 0
         },
+        "participantsCount": {
+            "type": "integer",
+            "required": true,
+            "default": 0
+        },
         "hasActiveRegister": {
             "type": "boolean",
             "required": true,
@@ -76,12 +81,6 @@
             "type": "relation",
             "relation": "oneToMany",
             "target": "api::activity-collaborator.activity-collaborator",
-            "mappedBy": "activity"
-        },
-        "participants": {
-            "type": "relation",
-            "relation": "oneToMany",
-            "target": "api::activity-participant.activity-participant",
             "mappedBy": "activity"
         }
     }

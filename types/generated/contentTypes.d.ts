@@ -524,7 +524,7 @@ export interface ApiActivityParticipantActivityParticipant
     draftAndPublish: false;
   };
   attributes: {
-    activity: Schema.Attribute.Relation<'manyToOne', 'api::activity.activity'>;
+    activity: Schema.Attribute.Relation<'oneToOne', 'api::activity.activity'>;
     checkIn: Schema.Attribute.Boolean &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<false>;
@@ -594,10 +594,9 @@ export interface ApiActivityActivity extends Struct.CollectionTypeSchema {
     > &
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
-    participants: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::activity-participant.activity-participant'
-    >;
+    participantsCount: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     shortDescription: Schema.Attribute.String & Schema.Attribute.Required;
     startDate: Schema.Attribute.DateTime & Schema.Attribute.Required;
@@ -852,40 +851,6 @@ export interface ApiCompetitionCompetition extends Struct.CollectionTypeSchema {
   };
 }
 
-export interface ApiEventAssistantEventAssistant
-  extends Struct.CollectionTypeSchema {
-  collectionName: 'event_assistants';
-  info: {
-    displayName: 'EventAssistant';
-    pluralName: 'event-assistants';
-    singularName: 'event-assistant';
-  };
-  options: {
-    draftAndPublish: false;
-  };
-  attributes: {
-    checkIn: Schema.Attribute.DateTime;
-    createdAt: Schema.Attribute.DateTime;
-    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    event: Schema.Attribute.Relation<'manyToOne', 'api::event.event'>;
-    locale: Schema.Attribute.String & Schema.Attribute.Private;
-    localizations: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::event-assistant.event-assistant'
-    > &
-      Schema.Attribute.Private;
-    publishedAt: Schema.Attribute.DateTime;
-    updatedAt: Schema.Attribute.DateTime;
-    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
-      Schema.Attribute.Private;
-    user: Schema.Attribute.Relation<
-      'oneToOne',
-      'plugin::users-permissions.user'
-    >;
-  };
-}
-
 export interface ApiEventCategoryEventCategory
   extends Struct.CollectionTypeSchema {
   collectionName: 'event_categories';
@@ -998,6 +963,45 @@ export interface ApiEventNetwokEventNetwok extends Struct.CollectionTypeSchema {
   };
 }
 
+export interface ApiEventParticipantEventParticipant
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'event_participants';
+  info: {
+    displayName: 'EventParticipant';
+    pluralName: 'event-participants';
+    singularName: 'event-participant';
+  };
+  options: {
+    draftAndPublish: true;
+  };
+  attributes: {
+    checkIn: Schema.Attribute.Boolean &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<false>;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    event: Schema.Attribute.Relation<'oneToOne', 'api::event.event'>;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::event-participant.event-participant'
+    > &
+      Schema.Attribute.Private;
+    publishedAt: Schema.Attribute.DateTime;
+    statusName: Schema.Attribute.Enumeration<['registered', 'paid']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'registered'>;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    user: Schema.Attribute.Relation<
+      'oneToOne',
+      'plugin::users-permissions.user'
+    >;
+  };
+}
+
 export interface ApiEventEvent extends Struct.CollectionTypeSchema {
   collectionName: 'events';
   info: {
@@ -1014,10 +1018,6 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
       'api::activity.activity'
     >;
     address: Schema.Attribute.Component<'place.address', false>;
-    assistants: Schema.Attribute.Relation<
-      'oneToMany',
-      'api::event-assistant.event-assistant'
-    >;
     capacity: Schema.Attribute.Integer;
     category: Schema.Attribute.Relation<
       'oneToOne',
@@ -1046,6 +1046,9 @@ export interface ApiEventEvent extends Struct.CollectionTypeSchema {
       Schema.Attribute.Private;
     name: Schema.Attribute.String & Schema.Attribute.Required;
     news: Schema.Attribute.Relation<'oneToMany', 'api::new.new'>;
+    participationCount: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
     publishedAt: Schema.Attribute.DateTime;
     shortDescription: Schema.Attribute.String & Schema.Attribute.Required;
     socialNetworks: Schema.Attribute.Relation<
@@ -1757,10 +1760,10 @@ declare module '@strapi/strapi' {
       'api::competition-model.competition-model': ApiCompetitionModelCompetitionModel;
       'api::competition-result.competition-result': ApiCompetitionResultCompetitionResult;
       'api::competition.competition': ApiCompetitionCompetition;
-      'api::event-assistant.event-assistant': ApiEventAssistantEventAssistant;
       'api::event-category.event-category': ApiEventCategoryEventCategory;
       'api::event-collaborator.event-collaborator': ApiEventCollaboratorEventCollaborator;
       'api::event-netwok.event-netwok': ApiEventNetwokEventNetwok;
+      'api::event-participant.event-participant': ApiEventParticipantEventParticipant;
       'api::event.event': ApiEventEvent;
       'api::model-reference.model-reference': ApiModelReferenceModelReference;
       'api::model.model': ApiModelModel;
