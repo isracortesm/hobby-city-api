@@ -2,28 +2,6 @@ import { errors } from '@strapi/utils';
 
 const { ApplicationError } = errors;
 
-async function countAndUpdateActivity(
-  strapi: any,
-  activityDocumentId: string,
-) {
-  const count = await strapi
-    .documents('api::activity-participant.activity-participant')
-    .count({ filters: { activity: { documentId: activityDocumentId } } });
-
-  const statuses = ['draft', 'published'] as const;
-  for (const status of statuses) {
-    try {
-      await strapi.documents('api::activity.activity').update({
-        documentId: activityDocumentId,
-        data: { participantsCount: count },
-        status,
-      });
-    } catch {
-      // skip if that status doesn't exist
-    }
-  }
-}
-
 function extractNumericId(value: unknown): number | null {
   if (typeof value === 'number') return value;
   if (typeof value === 'string') {
@@ -58,11 +36,15 @@ export default {
     const activityId = extractIdFromRelation(relationData);
     if (!activityId) return;
 
-    const activity = await strapi
-      .documents('api::activity.activity')
-      .findFirst({ filters: { id: activityId }, status: 'published' });
+    const activity = await strapi.db
+      .query('api::activity.activity')
+      .findOne({ where: { id: activityId } });
 
     if (!activity) {
+      throw new ApplicationError('Activity not found');
+    }
+
+    if (!activity.publishedAt) {
       throw new ApplicationError('The activity is not published yet');
     }
 
@@ -70,39 +52,59 @@ export default {
       throw new ApplicationError('The activity is already full');
     }
 
+    event.state.activityId = activityId;
     event.state.activityDocumentId = activity.documentId;
   },
 
   async afterCreate(event: any) {
-    const activityDocumentId = event.state?.activityDocumentId;
-    if (!activityDocumentId) return;
+    const { activityId, activityDocumentId } = event.state ?? {};
+    if (!activityId || !activityDocumentId) return;
 
-    await countAndUpdateActivity(strapi, activityDocumentId);
+    const count = await strapi.db
+      .query('api::activity-participant.activity-participant')
+      .count({ where: { activity: activityId } });
+
+    for (const status of ['draft', 'published'] as const) {
+      try {
+        await strapi.documents('api::activity.activity').update({
+          documentId: activityDocumentId,
+          data: { participantsCount: count },
+          status,
+        });
+      } catch { /* skip if status doesn't exist */ }
+    }
   },
 
   async beforeDelete(event: any) {
-  const where = event.params?.where;
-  if (!where) return;
+    const where = event.params?.where;
+    if (!where) return;
 
-  // 1. Obtenemos el registro usando el Query Engine de Strapi.
-  // Acepta tanto id numérico como documentId en el objeto 'where' de forma nativa.
-  const record = await strapi.db
-    .query('api::activity-participant.activity-participant')
-    .findOne({
-      where: where,
-      populate: { activity: true } // El Query Engine sí hace el JOIN directo en BD sin pasar por la lógica i18n/draft de v5
-    });
+    const record = await strapi.db
+      .query('api::activity-participant.activity-participant')
+      .findOne({ where, populate: { activity: true } });
 
-  // 2. Si encontró el participante y tiene una actividad vinculada, guardamos su documentId
-  if (record?.activity?.documentId) {
-    event.state.activityDocumentId = record.activity.documentId;
-  }
-},
+    if (record?.activity?.documentId) {
+      event.state.activityId = record.activity.id;
+      event.state.activityDocumentId = record.activity.documentId;
+    }
+  },
 
   async afterDelete(event: any) {
-    const activityDocumentId = event.state?.activityDocumentId;
-    if (!activityDocumentId) return;
+    const { activityId, activityDocumentId } = event.state ?? {};
+    if (!activityId || !activityDocumentId) return;
 
-    await countAndUpdateActivity(strapi, activityDocumentId);
+    const count = await strapi.db
+      .query('api::activity-participant.activity-participant')
+      .count({ where: { activity: activityId } });
+
+    for (const status of ['draft', 'published'] as const) {
+      try {
+        await strapi.documents('api::activity.activity').update({
+          documentId: activityDocumentId,
+          data: { participantsCount: count },
+          status,
+        });
+      } catch { /* skip if status doesn't exist */ }
+    }
   },
 };
