@@ -24,7 +24,7 @@ async function countAndUpdateActivity(
   }
 }
 
-function extractId(value: unknown): number | null {
+function extractNumericId(value: unknown): number | null {
   if (typeof value === 'number') return value;
   if (typeof value === 'string') {
     const n = Number(value);
@@ -33,87 +33,38 @@ function extractId(value: unknown): number | null {
   return null;
 }
 
-async function resolveActivity(
-  strapi: any,
-  activityData: unknown,
-): Promise<any> {
-  if (!activityData) return null;
+function extractIdFromRelation(data: unknown): number | null {
+  if (!data || typeof data !== 'object') return null;
+  const obj = data as Record<string, unknown>;
 
-  // direct id or documentId string
-  if (typeof activityData === 'string') {
-    const id = extractId(activityData);
-    if (id !== null) {
-      return strapi
-        .documents('api::activity.activity')
-        .findFirst({ filters: { id } });
-    }
-    return strapi
-      .documents('api::activity.activity')
-      .findOne({ documentId: activityData });
+  if (Array.isArray(obj.set) && obj.set.length > 0) {
+    return extractNumericId((obj.set[0] as Record<string, unknown>)?.id);
   }
 
-  // direct numeric id
-  if (typeof activityData === 'number') {
-    return strapi
-      .documents('api::activity.activity')
-      .findFirst({ filters: { id: activityData } });
+  if (Array.isArray(obj.connect) && obj.connect.length > 0) {
+    return extractNumericId((obj.connect[0] as Record<string, unknown>)?.id);
   }
 
-  if (typeof activityData === 'object' && activityData !== null) {
-    const obj = activityData as Record<string, unknown>;
-
-    // { id: 8 } or { id: '8' }
-    if (obj.id) {
-      const id = extractId(obj.id);
-      if (id !== null) {
-        return strapi
-          .documents('api::activity.activity')
-          .findFirst({ filters: { id } });
-      }
-    }
-
-    // { documentId: 'abc' }
-    if (typeof obj.documentId === 'string') {
-      return strapi
-        .documents('api::activity.activity')
-        .findOne({ documentId: obj.documentId });
-    }
-
-    // { set: [ { id: '8' } ] } — query engine lifecycle format
-    if (Array.isArray(obj.set) && obj.set.length > 0) {
-      const first = obj.set[0] as Record<string, unknown>;
-      const id = extractId(first?.id);
-      if (id !== null) {
-        return strapi
-          .documents('api::activity.activity')
-          .findFirst({ filters: { id } });
-      }
-    }
-
-    // { connect: [ { id: '8' } ] }
-    if (Array.isArray(obj.connect) && obj.connect.length > 0) {
-      const first = obj.connect[0] as Record<string, unknown>;
-      const id = extractId(first?.id ?? first?.documentId);
-      if (id !== null) {
-        return strapi
-          .documents('api::activity.activity')
-          .findFirst({ filters: { id } });
-      }
-      if (first?.documentId) {
-        return strapi
-          .documents('api::activity.activity')
-          .findOne({ documentId: first.documentId as string });
-      }
-    }
+  if ('id' in obj) {
+    return extractNumericId(obj.id);
   }
 
-  return null;
+  return extractNumericId(data);
 }
 
 export default {
   async beforeCreate(event: any) {
-    const activity = await resolveActivity(strapi, event.params.data?.activity);
-    if (!activity?.documentId) return;
+    const relationData = event.params.data?.activity;
+    const activityId = extractIdFromRelation(relationData);
+    if (!activityId) return;
+
+    const activity = await strapi
+      .documents('api::activity.activity')
+      .findFirst({ filters: { id: activityId }, status: 'published' });
+
+    if (!activity) {
+      throw new ApplicationError('The activity is not published yet');
+    }
 
     if (activity.participantsCount >= activity.capacity && activity.capacity > 0) {
       throw new ApplicationError('The activity is already full');
@@ -123,22 +74,15 @@ export default {
   },
 
   async afterCreate(event: any) {
-    const activityDocumentId =
-      event.state?.activityDocumentId;
-
-    if (!activityDocumentId) {
-      const activity = await resolveActivity(strapi, event.result?.activity);
-      if (activity?.documentId) {
-        return await countAndUpdateActivity(strapi, activity.documentId);
-      }
-      return;
-    }
+    const activityDocumentId = event.state?.activityDocumentId;
+    if (!activityDocumentId) return;
 
     await countAndUpdateActivity(strapi, activityDocumentId);
   },
 
   async beforeDelete(event: any) {
     const where = event.params?.where;
+    console.log(where)
     if (!where) return;
 
     let record: any = null;
@@ -153,6 +97,7 @@ export default {
         .findFirst({ filters: { id: where.id }, populate: { activity: true } });
     }
 
+    console.log(record)
     if (record?.activity?.documentId) {
       event.state.activityDocumentId = record.activity.documentId;
     }
@@ -160,6 +105,7 @@ export default {
 
   async afterDelete(event: any) {
     const activityDocumentId = event.state?.activityDocumentId;
+    console.log(activityDocumentId)
     if (!activityDocumentId) return;
 
     await countAndUpdateActivity(strapi, activityDocumentId);

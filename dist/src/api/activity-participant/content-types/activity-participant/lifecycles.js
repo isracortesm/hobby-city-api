@@ -20,7 +20,7 @@ async function countAndUpdateActivity(strapi, activityDocumentId) {
         }
     }
 }
-function extractId(value) {
+function extractNumericId(value) {
     if (typeof value === 'number')
         return value;
     if (typeof value === 'string') {
@@ -30,99 +30,51 @@ function extractId(value) {
     }
     return null;
 }
-async function resolveActivity(strapi, activityData) {
-    var _a;
-    if (!activityData)
+function extractIdFromRelation(data) {
+    var _a, _b;
+    if (!data || typeof data !== 'object')
         return null;
-    // direct id or documentId string
-    if (typeof activityData === 'string') {
-        const id = extractId(activityData);
-        if (id !== null) {
-            return strapi
-                .documents('api::activity.activity')
-                .findFirst({ filters: { id } });
-        }
-        return strapi
-            .documents('api::activity.activity')
-            .findOne({ documentId: activityData });
+    const obj = data;
+    if (Array.isArray(obj.set) && obj.set.length > 0) {
+        return extractNumericId((_a = obj.set[0]) === null || _a === void 0 ? void 0 : _a.id);
     }
-    // direct numeric id
-    if (typeof activityData === 'number') {
-        return strapi
-            .documents('api::activity.activity')
-            .findFirst({ filters: { id: activityData } });
+    if (Array.isArray(obj.connect) && obj.connect.length > 0) {
+        return extractNumericId((_b = obj.connect[0]) === null || _b === void 0 ? void 0 : _b.id);
     }
-    if (typeof activityData === 'object' && activityData !== null) {
-        const obj = activityData;
-        // { id: 8 } or { id: '8' }
-        if (obj.id) {
-            const id = extractId(obj.id);
-            if (id !== null) {
-                return strapi
-                    .documents('api::activity.activity')
-                    .findFirst({ filters: { id } });
-            }
-        }
-        // { documentId: 'abc' }
-        if (typeof obj.documentId === 'string') {
-            return strapi
-                .documents('api::activity.activity')
-                .findOne({ documentId: obj.documentId });
-        }
-        // { set: [ { id: '8' } ] } — query engine lifecycle format
-        if (Array.isArray(obj.set) && obj.set.length > 0) {
-            const first = obj.set[0];
-            const id = extractId(first === null || first === void 0 ? void 0 : first.id);
-            if (id !== null) {
-                return strapi
-                    .documents('api::activity.activity')
-                    .findFirst({ filters: { id } });
-            }
-        }
-        // { connect: [ { id: '8' } ] }
-        if (Array.isArray(obj.connect) && obj.connect.length > 0) {
-            const first = obj.connect[0];
-            const id = extractId((_a = first === null || first === void 0 ? void 0 : first.id) !== null && _a !== void 0 ? _a : first === null || first === void 0 ? void 0 : first.documentId);
-            if (id !== null) {
-                return strapi
-                    .documents('api::activity.activity')
-                    .findFirst({ filters: { id } });
-            }
-            if (first === null || first === void 0 ? void 0 : first.documentId) {
-                return strapi
-                    .documents('api::activity.activity')
-                    .findOne({ documentId: first.documentId });
-            }
-        }
+    if ('id' in obj) {
+        return extractNumericId(obj.id);
     }
-    return null;
+    return extractNumericId(data);
 }
 exports.default = {
     async beforeCreate(event) {
         var _a;
-        const activity = await resolveActivity(strapi, (_a = event.params.data) === null || _a === void 0 ? void 0 : _a.activity);
-        if (!(activity === null || activity === void 0 ? void 0 : activity.documentId))
+        const relationData = (_a = event.params.data) === null || _a === void 0 ? void 0 : _a.activity;
+        const activityId = extractIdFromRelation(relationData);
+        if (!activityId)
             return;
+        const activity = await strapi
+            .documents('api::activity.activity')
+            .findFirst({ filters: { id: activityId }, status: 'published' });
+        if (!activity) {
+            throw new ApplicationError('The activity is not published yet');
+        }
         if (activity.participantsCount >= activity.capacity && activity.capacity > 0) {
             throw new ApplicationError('The activity is already full');
         }
         event.state.activityDocumentId = activity.documentId;
     },
     async afterCreate(event) {
-        var _a, _b;
+        var _a;
         const activityDocumentId = (_a = event.state) === null || _a === void 0 ? void 0 : _a.activityDocumentId;
-        if (!activityDocumentId) {
-            const activity = await resolveActivity(strapi, (_b = event.result) === null || _b === void 0 ? void 0 : _b.activity);
-            if (activity === null || activity === void 0 ? void 0 : activity.documentId) {
-                return await countAndUpdateActivity(strapi, activity.documentId);
-            }
+        if (!activityDocumentId)
             return;
-        }
         await countAndUpdateActivity(strapi, activityDocumentId);
     },
     async beforeDelete(event) {
         var _a, _b;
         const where = (_a = event.params) === null || _a === void 0 ? void 0 : _a.where;
+        console.log(where);
         if (!where)
             return;
         let record = null;
@@ -136,6 +88,7 @@ exports.default = {
                 .documents('api::activity-participant.activity-participant')
                 .findFirst({ filters: { id: where.id }, populate: { activity: true } });
         }
+        console.log(record);
         if ((_b = record === null || record === void 0 ? void 0 : record.activity) === null || _b === void 0 ? void 0 : _b.documentId) {
             event.state.activityDocumentId = record.activity.documentId;
         }
@@ -143,6 +96,7 @@ exports.default = {
     async afterDelete(event) {
         var _a;
         const activityDocumentId = (_a = event.state) === null || _a === void 0 ? void 0 : _a.activityDocumentId;
+        console.log(activityDocumentId);
         if (!activityDocumentId)
             return;
         await countAndUpdateActivity(strapi, activityDocumentId);
