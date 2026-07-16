@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "skills": {
+    "nodejs-backend-patterns": {
+      "source": "wshobson/agents",
+      "sourceType": "github",
+      "skillPath": "plugins/javascript-typescript/skills/nodejs-backend-patterns/SKILL.md",
+      "computedHash": "48294eab8cded4902690197f684e2053c6fa02af303a1397ab53ea41e7d7a6bd"
+    },
+    "strapi-v5-expert": {
+      "source": "moteodimassi/strapi-v5-expert",
+      "sourceType": "github",
+      "skillPath": "SKILL.md",
+      "computedHash": "271f8712d98abccf871d85a7a84c13e8b0f8a27857b043aaee3c8f1185942982"
+    },
+    "stripe-best-practices": {
+      "source": "stripe/ai",
+      "sourceType": "github",
+      "skillPath": "skills/stripe-best-practices/SKILL.md",
+      "computedHash": "234147b65541e6f4b4ea8bf393bf2aae954de4c9a04d69209e6d1d3fffb62477"
+    }
+  }
+}

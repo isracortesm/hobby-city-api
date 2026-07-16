@@ -64,6 +64,11 @@
         "capacity": {
             "type": "integer"
         },
+        "participationCount": {
+            "type": "integer",
+            "required": true,
+            "default": 0
+        },
         "likes": {
             "type": "biginteger",
             "required": true,
@@ -95,12 +100,6 @@
             "type": "relation",
             "relation": "oneToMany",
             "target": "api::event-collaborator.event-collaborator",
-            "mappedBy": "event"
-        },
-        "assistants": {
-            "type": "relation",
-            "relation": "oneToMany",
-            "target": "api::event-assistant.event-assistant",
             "mappedBy": "event"
         },
         "socialNetworks": {

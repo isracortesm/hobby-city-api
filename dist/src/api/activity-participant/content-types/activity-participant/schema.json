@@ -27,9 +27,8 @@
         },
         "activity": {
             "type": "relation",
-            "relation": "manyToOne",
-            "target": "api::activity.activity",
-            "inversedBy": "participants"
+            "relation": "oneToOne",
+            "target": "api::activity.activity"
         },
         "user": {
             "type": "relation",

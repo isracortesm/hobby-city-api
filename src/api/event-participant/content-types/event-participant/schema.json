@@ -1,0 +1,39 @@
+{
+  "kind": "collectionType",
+  "collectionName": "event_participants",
+  "info": {
+    "singularName": "event-participant",
+    "pluralName": "event-participants",
+    "displayName": "EventParticipant"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "statusName": {
+      "type": "enumeration",
+      "required": true,
+      "default": "registered",
+      "enum": [
+        "registered",
+        "paid"
+      ]
+    },
+    "checkIn": {
+      "type": "boolean",
+      "required": true,
+      "default": false
+    },
+    "event": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::event.event"
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user"
+    }
+  }
+}
