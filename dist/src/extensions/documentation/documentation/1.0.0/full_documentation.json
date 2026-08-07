@@ -14,7 +14,7 @@
             "name": "Apache 2.0",
             "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        "x-generation-date": "2026-08-07T02:17:34.344Z"
+        "x-generation-date": "2026-08-07T02:47:46.556Z"
     },
     "x-strapi-config": {
         "plugins": [
@@ -24441,9 +24441,8 @@
                             "type": {
                                 "type": "string",
                                 "enum": [
-                                    "classicByOrder",
-                                    "classicByPoints",
-                                    "criteriaByCategory"
+                                    "byOrder",
+                                    "byCriteria"
                                 ]
                             },
                             "hasPublicResults": {
@@ -24585,9 +24584,8 @@
                     "type": {
                         "type": "string",
                         "enum": [
-                            "classicByOrder",
-                            "classicByPoints",
-                            "criteriaByCategory"
+                            "byOrder",
+                            "byCriteria"
                         ]
                     },
                     "hasPublicResults": {
@@ -28206,9 +28204,8 @@
                                         "type": {
                                             "type": "string",
                                             "enum": [
-                                                "classicByOrder",
-                                                "classicByPoints",
-                                                "criteriaByCategory"
+                                                "byOrder",
+                                                "byCriteria"
                                             ]
                                         },
                                         "hasPublicResults": {
@@ -28523,6 +28520,13 @@
                                                             },
                                                             "requiredValue": {
                                                                 "type": "integer"
+                                                            },
+                                                            "operationType": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "average",
+                                                                    "sum"
+                                                                ]
                                                             },
                                                             "createdAt": {
                                                                 "type": "string",
@@ -29376,7 +29380,8 @@
                         "required": [
                             "batch",
                             "codeName",
-                            "batchName"
+                            "batchName",
+                            "operationType"
                         ],
                         "type": "object",
                         "properties": {
@@ -29410,6 +29415,13 @@
                             },
                             "requiredValue": {
                                 "type": "integer"
+                            },
+                            "operationType": {
+                                "type": "string",
+                                "enum": [
+                                    "average",
+                                    "sum"
+                                ]
                             },
                             "locale": {
                                 "type": "string"
@@ -29472,7 +29484,8 @@
                 "required": [
                     "batch",
                     "codeName",
-                    "batchName"
+                    "batchName",
+                    "operationType"
                 ],
                 "properties": {
                     "id": {
@@ -30622,6 +30635,13 @@
                     "requiredValue": {
                         "type": "integer"
                     },
+                    "operationType": {
+                        "type": "string",
+                        "enum": [
+                            "average",
+                            "sum"
+                        ]
+                    },
                     "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -30882,6 +30902,13 @@
                                 },
                                 "requiredValue": {
                                     "type": "integer"
+                                },
+                                "operationType": {
+                                    "type": "string",
+                                    "enum": [
+                                        "average",
+                                        "sum"
+                                    ]
                                 },
                                 "createdAt": {
                                     "type": "string",
@@ -32249,6 +32276,13 @@
                                 },
                                 "requiredValue": {
                                     "type": "integer"
+                                },
+                                "operationType": {
+                                    "type": "string",
+                                    "enum": [
+                                        "average",
+                                        "sum"
+                                    ]
                                 },
                                 "createdAt": {
                                     "type": "string",
@@ -37301,9 +37335,8 @@
                                     "type": {
                                         "type": "string",
                                         "enum": [
-                                            "classicByOrder",
-                                            "classicByPoints",
-                                            "criteriaByCategory"
+                                            "byOrder",
+                                            "byCriteria"
                                         ]
                                     },
                                     "hasPublicResults": {
@@ -37633,6 +37666,13 @@
                                                                     },
                                                                     "requiredValue": {
                                                                         "type": "integer"
+                                                                    },
+                                                                    "operationType": {
+                                                                        "type": "string",
+                                                                        "enum": [
+                                                                            "average",
+                                                                            "sum"
+                                                                        ]
                                                                     },
                                                                     "createdAt": {
                                                                         "type": "string",
@@ -38556,9 +38596,8 @@
                             "type": {
                                 "type": "string",
                                 "enum": [
-                                    "classicByOrder",
-                                    "classicByPoints",
-                                    "criteriaByCategory"
+                                    "byOrder",
+                                    "byCriteria"
                                 ]
                             },
                             "hasPublicResults": {
@@ -42443,6 +42482,13 @@
                                                             },
                                                             "requiredValue": {
                                                                 "type": "integer"
+                                                            },
+                                                            "operationType": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "average",
+                                                                    "sum"
+                                                                ]
                                                             },
                                                             "createdAt": {
                                                                 "type": "string",
@@ -43457,9 +43503,8 @@
                             "type": {
                                 "type": "string",
                                 "enum": [
-                                    "classicByOrder",
-                                    "classicByPoints",
-                                    "criteriaByCategory"
+                                    "byOrder",
+                                    "byCriteria"
                                 ]
                             },
                             "hasPublicResults": {
@@ -47344,6 +47389,13 @@
                                                             },
                                                             "requiredValue": {
                                                                 "type": "integer"
+                                                            },
+                                                            "operationType": {
+                                                                "type": "string",
+                                                                "enum": [
+                                                                    "average",
+                                                                    "sum"
+                                                                ]
                                                             },
                                                             "createdAt": {
                                                                 "type": "string",

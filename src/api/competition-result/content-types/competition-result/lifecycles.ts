@@ -31,8 +31,9 @@ async function assignBatch(resultId: number): Promise<void> {
 
   for (const batch of result.model.category.batches ?? []) {
     const requiredValue = batch.requiredValue ?? 0;
+    const operationType = batch.operationType ?? 'average';
     const metric =
-      batch.operationType === 'average'
+      operationType === 'average'
         ? evaluationCount > 0
           ? totalPoints / evaluationCount
           : 0

@@ -44,6 +44,15 @@
             "type": "integer",
             "required": false,
             "default": 0
+        },
+        "operationType": {
+            "type": "enumeration",
+            "required": true,
+            "default": "average",
+            "enum": [
+                "average",
+                "sum"
+            ]
         }
     }
 }

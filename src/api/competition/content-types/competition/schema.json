@@ -14,10 +14,10 @@
     "type": {
       "type": "enumeration",
       "required": true,
+      "default": "byCriteria",
       "enum": [
-        "classicByOrder",
-        "classicByPoints",
-        "criteriaByCategory"
+        "byOrder",
+        "byCriteria"
       ]
     },
     "hasPublicResults": {

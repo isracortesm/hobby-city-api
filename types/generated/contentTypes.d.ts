@@ -635,6 +635,9 @@ export interface ApiCompetitionBatchCompetitionBatch
       'api::competition-batch.competition-batch'
     > &
       Schema.Attribute.Private;
+    operationType: Schema.Attribute.Enumeration<['average', 'sum']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'average'>;
     publishedAt: Schema.Attribute.DateTime;
     requiredValue: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
     updatedAt: Schema.Attribute.DateTime;
@@ -879,10 +882,9 @@ export interface ApiCompetitionCompetition extends Struct.CollectionTypeSchema {
       'oneToMany',
       'api::competition-result.competition-result'
     >;
-    type: Schema.Attribute.Enumeration<
-      ['classicByOrder', 'classicByPoints', 'criteriaByCategory']
-    > &
-      Schema.Attribute.Required;
+    type: Schema.Attribute.Enumeration<['byOrder', 'byCriteria']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'byCriteria'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
