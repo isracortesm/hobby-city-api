@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "d7f10b190e4c5c54eed41c592210bba68c9f8bb3",
-    "indexed_at": "2026-08-05T23:23:51Z",
-    "project": "D-Workspace-HobbyCity-hobby-city-api",
-    "nodes": 1331,
-    "edges": 1280,
-    "original_size": 3735552,
-    "compressed_size": 225495,
+    "commit": "68c381b097b9c46aa444f696a5f8292f75b46bb7",
+    "indexed_at": "2026-08-07T02:32:21Z",
+    "project": "home-icortes-Proyectos-hobby-city-hobby-city-api",
+    "nodes": 1383,
+    "edges": 1360,
+    "original_size": 4063232,
+    "compressed_size": 250020,
     "compression_level": 3
 }
