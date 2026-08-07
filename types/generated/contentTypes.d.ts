@@ -496,6 +496,7 @@ export interface ApiActivityCollaboratorActivityCollaborator
       'api::activity-collaborator.activity-collaborator'
     > &
       Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
     role: Schema.Attribute.Enumeration<
       ['admin', 'judge', 'speaker', 'instructor', 'other']

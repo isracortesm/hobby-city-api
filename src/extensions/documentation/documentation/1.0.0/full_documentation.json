@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-08-07T02:47:46.556Z"
+    "x-generation-date": "2026-08-07T23:36:27.548Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -15101,6 +15101,7 @@
                               }
                             }
                           },
+                          "metadata": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -16735,6 +16736,7 @@
                 ],
                 "example": "string or id"
               },
+              "metadata": {},
               "locale": {
                 "type": "string"
               },
@@ -20247,6 +20249,7 @@
                         }
                       }
                     },
+                    "metadata": {},
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -20414,6 +20417,7 @@
               }
             }
           },
+          "metadata": {},
           "createdAt": {
             "type": "string",
             "format": "date-time"
@@ -24054,6 +24058,7 @@
                         }
                       }
                     },
+                    "metadata": {},
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -28018,6 +28023,7 @@
                         }
                       }
                     },
+                    "metadata": {},
                     "createdAt": {
                       "type": "string",
                       "format": "date-time"
@@ -37220,6 +37226,7 @@
                   }
                 }
               },
+              "metadata": {},
               "createdAt": {
                 "type": "string",
                 "format": "date-time"
@@ -42030,6 +42037,7 @@
                             }
                           }
                         },
+                        "metadata": {},
                         "createdAt": {
                           "type": "string",
                           "format": "date-time"
@@ -46937,6 +46945,7 @@
                             }
                           }
                         },
+                        "metadata": {},
                         "createdAt": {
                           "type": "string",
                           "format": "date-time"
@@ -51749,6 +51758,7 @@
                                     }
                                   }
                                 },
+                                "metadata": {},
                                 "createdAt": {
                                   "type": "string",
                                   "format": "date-time"
@@ -56585,6 +56595,7 @@
                               }
                             }
                           },
+                          "metadata": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -60407,6 +60418,7 @@
                               }
                             }
                           },
+                          "metadata": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -64196,6 +64208,7 @@
                               }
                             }
                           },
+                          "metadata": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
@@ -73010,6 +73023,7 @@
                               }
                             }
                           },
+                          "metadata": {},
                           "createdAt": {
                             "type": "string",
                             "format": "date-time"
