@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "ea6eafac7832c64d1a15eed1916eda04b6c7e661",
-    "indexed_at": "2026-08-10T20:16:31Z",
+    "commit": "046bd1b56888601a526ef3b6114c4f609b79288b",
+    "indexed_at": "2026-08-10T23:54:38Z",
     "project": "D-Workspace-HobbyCity-hobby-city-api",
-    "nodes": 1388,
-    "edges": 1347,
-    "original_size": 3866624,
-    "compressed_size": 257708,
+    "nodes": 1424,
+    "edges": 1406,
+    "original_size": 3932160,
+    "compressed_size": 288242,
     "compression_level": 3
 }

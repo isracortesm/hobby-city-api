@@ -1,4 +1,5 @@
-// import type { Core } from '@strapi/strapi';
+import type { Core } from '@strapi/strapi';
+import competitionResultEmailOverride from './documentation/competition-result-email';
 
 export default {
   /**
@@ -7,7 +8,12 @@ export default {
    *
    * This gives you an opportunity to extend code.
    */
-  register(/* { strapi }: { strapi: Core.Strapi } */) {},
+  register({ strapi }: { strapi: Core.Strapi }) {
+    strapi
+      .plugin('documentation')
+      .service('override')
+      .registerOverride(competitionResultEmailOverride);
+  },
 
   /**
    * An asynchronous bootstrap function that runs before
