@@ -25,6 +25,15 @@
       "required": true,
       "default": false
     },
+    "operationType": {
+      "type": "enumeration",
+      "required": true,
+      "default": "average",
+      "enum": [
+        "average",
+        "sum"
+      ]
+    },
     "modelsLimit": {
       "type": "integer",
       "required": true,

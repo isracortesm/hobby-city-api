@@ -10,49 +10,36 @@ function extractNumericId(value) {
     }
     return null;
 }
-function extractIdFromRelation(data) {
+async function getResultIdFromEvaluation(evaluationId) {
     var _a, _b;
-    if (!data || typeof data !== 'object')
-        return null;
-    const obj = data;
-    if (Array.isArray(obj.set) && obj.set.length > 0) {
-        return extractNumericId((_a = obj.set[0]) === null || _a === void 0 ? void 0 : _a.id);
-    }
-    if (Array.isArray(obj.connect) && obj.connect.length > 0) {
-        return extractNumericId((_b = obj.connect[0]) === null || _b === void 0 ? void 0 : _b.id);
-    }
-    if ('id' in obj) {
-        return extractNumericId(obj.id);
-    }
-    return extractNumericId(data);
-}
-async function recalcResultTotalPoints(resultId) {
-    const result = await strapi.db
-        .query('api::competition-result.competition-result')
-        .findOne({ where: { id: resultId } });
-    if (!result)
-        return;
-    const evaluations = await strapi.db
+    const evaluation = await strapi.db
         .query('api::competition-evaluation.competition-evaluation')
-        .findMany({ where: { result: resultId }, select: ['points'] });
-    const totalPoints = evaluations.reduce((acc, evaluation) => { var _a; return acc + ((_a = evaluation.points) !== null && _a !== void 0 ? _a : 0); }, 0);
-    await strapi.db
-        .query('api::competition-result.competition-result')
-        .update({ where: { id: resultId }, data: { totalPoints } });
+        .findOne({ where: { id: evaluationId }, populate: { result: true } });
+    return (_b = (_a = evaluation === null || evaluation === void 0 ? void 0 : evaluation.result) === null || _a === void 0 ? void 0 : _a.id) !== null && _b !== void 0 ? _b : null;
+}
+async function recomputeResult(resultId) {
+    const service = strapi.service('api::competition-result.competition-result');
+    await service.recomputeResult(resultId);
 }
 exports.default = {
     async afterCreate(event) {
         var _a;
-        const resultId = extractIdFromRelation((_a = event.result) === null || _a === void 0 ? void 0 : _a.result);
+        const evaluationId = extractNumericId((_a = event.result) === null || _a === void 0 ? void 0 : _a.id);
+        if (!evaluationId)
+            return;
+        const resultId = await getResultIdFromEvaluation(evaluationId);
         if (resultId) {
-            await recalcResultTotalPoints(resultId);
+            await recomputeResult(resultId);
         }
     },
     async afterUpdate(event) {
         var _a;
-        const resultId = extractIdFromRelation((_a = event.result) === null || _a === void 0 ? void 0 : _a.result);
+        const evaluationId = extractNumericId((_a = event.result) === null || _a === void 0 ? void 0 : _a.id);
+        if (!evaluationId)
+            return;
+        const resultId = await getResultIdFromEvaluation(evaluationId);
         if (resultId) {
-            await recalcResultTotalPoints(resultId);
+            await recomputeResult(resultId);
         }
     },
     async beforeDelete(event) {
@@ -72,6 +59,6 @@ exports.default = {
         const { resultId } = (_a = event.state) !== null && _a !== void 0 ? _a : {};
         if (!resultId)
             return;
-        await recalcResultTotalPoints(resultId);
+        await recomputeResult(resultId);
     },
 };

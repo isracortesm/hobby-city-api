@@ -14,7 +14,7 @@
             "name": "Apache 2.0",
             "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        "x-generation-date": "2026-08-07T23:36:27.548Z"
+        "x-generation-date": "2026-08-10T20:05:53.359Z"
     },
     "x-strapi-config": {
         "plugins": [
@@ -24439,6 +24439,7 @@
                         "required": [
                             "type",
                             "hasPublicResults",
+                            "operationType",
                             "modelsLimit"
                         ],
                         "type": "object",
@@ -24452,6 +24453,13 @@
                             },
                             "hasPublicResults": {
                                 "type": "boolean"
+                            },
+                            "operationType": {
+                                "type": "string",
+                                "enum": [
+                                    "average",
+                                    "sum"
+                                ]
                             },
                             "modelsLimit": {
                                 "type": "integer"
@@ -24570,6 +24578,7 @@
                 "required": [
                     "type",
                     "hasPublicResults",
+                    "operationType",
                     "modelsLimit"
                 ],
                 "properties": {
@@ -24595,6 +24604,13 @@
                     },
                     "hasPublicResults": {
                         "type": "boolean"
+                    },
+                    "operationType": {
+                        "type": "string",
+                        "enum": [
+                            "average",
+                            "sum"
+                        ]
                     },
                     "modelsLimit": {
                         "type": "integer"
@@ -28217,6 +28233,13 @@
                                         "hasPublicResults": {
                                             "type": "boolean"
                                         },
+                                        "operationType": {
+                                            "type": "string",
+                                            "enum": [
+                                                "average",
+                                                "sum"
+                                            ]
+                                        },
                                         "modelsLimit": {
                                             "type": "integer"
                                         },
@@ -28281,7 +28304,8 @@
                                                         "type": "integer"
                                                     },
                                                     "totalPoints": {
-                                                        "type": "integer"
+                                                        "type": "number",
+                                                        "format": "float"
                                                     },
                                                     "competition": {
                                                         "type": "object",
@@ -28526,13 +28550,6 @@
                                                             },
                                                             "requiredValue": {
                                                                 "type": "integer"
-                                                            },
-                                                            "operationType": {
-                                                                "type": "string",
-                                                                "enum": [
-                                                                    "average",
-                                                                    "sum"
-                                                                ]
                                                             },
                                                             "createdAt": {
                                                                 "type": "string",
@@ -29386,8 +29403,7 @@
                         "required": [
                             "batch",
                             "codeName",
-                            "batchName",
-                            "operationType"
+                            "batchName"
                         ],
                         "type": "object",
                         "properties": {
@@ -29421,13 +29437,6 @@
                             },
                             "requiredValue": {
                                 "type": "integer"
-                            },
-                            "operationType": {
-                                "type": "string",
-                                "enum": [
-                                    "average",
-                                    "sum"
-                                ]
                             },
                             "locale": {
                                 "type": "string"
@@ -29490,8 +29499,7 @@
                 "required": [
                     "batch",
                     "codeName",
-                    "batchName",
-                    "operationType"
+                    "batchName"
                 ],
                 "properties": {
                     "id": {
@@ -30641,13 +30649,6 @@
                     "requiredValue": {
                         "type": "integer"
                     },
-                    "operationType": {
-                        "type": "string",
-                        "enum": [
-                            "average",
-                            "sum"
-                        ]
-                    },
                     "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -30908,13 +30909,6 @@
                                 },
                                 "requiredValue": {
                                     "type": "integer"
-                                },
-                                "operationType": {
-                                    "type": "string",
-                                    "enum": [
-                                        "average",
-                                        "sum"
-                                    ]
                                 },
                                 "createdAt": {
                                     "type": "string",
@@ -32282,13 +32276,6 @@
                                 },
                                 "requiredValue": {
                                     "type": "integer"
-                                },
-                                "operationType": {
-                                    "type": "string",
-                                    "enum": [
-                                        "average",
-                                        "sum"
-                                    ]
                                 },
                                 "createdAt": {
                                     "type": "string",
@@ -37321,7 +37308,8 @@
                                 "type": "integer"
                             },
                             "totalPoints": {
-                                "type": "integer"
+                                "type": "number",
+                                "format": "float"
                             },
                             "competition": {
                                 "type": "object",
@@ -37348,6 +37336,13 @@
                                     },
                                     "hasPublicResults": {
                                         "type": "boolean"
+                                    },
+                                    "operationType": {
+                                        "type": "string",
+                                        "enum": [
+                                            "average",
+                                            "sum"
+                                        ]
                                     },
                                     "modelsLimit": {
                                         "type": "integer"
@@ -37673,13 +37668,6 @@
                                                                     },
                                                                     "requiredValue": {
                                                                         "type": "integer"
-                                                                    },
-                                                                    "operationType": {
-                                                                        "type": "string",
-                                                                        "enum": [
-                                                                            "average",
-                                                                            "sum"
-                                                                        ]
                                                                     },
                                                                     "createdAt": {
                                                                         "type": "string",
@@ -38610,6 +38598,13 @@
                             "hasPublicResults": {
                                 "type": "boolean"
                             },
+                            "operationType": {
+                                "type": "string",
+                                "enum": [
+                                    "average",
+                                    "sum"
+                                ]
+                            },
                             "modelsLimit": {
                                 "type": "integer"
                             },
@@ -42491,13 +42486,6 @@
                                                             "requiredValue": {
                                                                 "type": "integer"
                                                             },
-                                                            "operationType": {
-                                                                "type": "string",
-                                                                "enum": [
-                                                                    "average",
-                                                                    "sum"
-                                                                ]
-                                                            },
                                                             "createdAt": {
                                                                 "type": "string",
                                                                 "format": "date-time"
@@ -42849,7 +42837,8 @@
                                             "type": "integer"
                                         },
                                         "totalPoints": {
-                                            "type": "integer"
+                                            "type": "number",
+                                            "format": "float"
                                         },
                                         "competition": {
                                             "type": "object",
@@ -43365,7 +43354,8 @@
                                 "type": "integer"
                             },
                             "totalPoints": {
-                                "type": "integer"
+                                "type": "number",
+                                "format": "float"
                             },
                             "competition": {
                                 "oneOf": [
@@ -43490,7 +43480,8 @@
                         "type": "integer"
                     },
                     "totalPoints": {
-                        "type": "integer"
+                        "type": "number",
+                        "format": "float"
                     },
                     "competition": {
                         "type": "object",
@@ -43517,6 +43508,13 @@
                             },
                             "hasPublicResults": {
                                 "type": "boolean"
+                            },
+                            "operationType": {
+                                "type": "string",
+                                "enum": [
+                                    "average",
+                                    "sum"
+                                ]
                             },
                             "modelsLimit": {
                                 "type": "integer"
@@ -47399,13 +47397,6 @@
                                                             "requiredValue": {
                                                                 "type": "integer"
                                                             },
-                                                            "operationType": {
-                                                                "type": "string",
-                                                                "enum": [
-                                                                    "average",
-                                                                    "sum"
-                                                                ]
-                                                            },
                                                             "createdAt": {
                                                                 "type": "string",
                                                                 "format": "date-time"
@@ -47757,7 +47748,8 @@
                                             "type": "integer"
                                         },
                                         "totalPoints": {
-                                            "type": "integer"
+                                            "type": "number",
+                                            "format": "float"
                                         },
                                         "competition": {
                                             "type": "object",
