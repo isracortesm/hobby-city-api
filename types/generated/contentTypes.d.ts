@@ -496,6 +496,7 @@ export interface ApiActivityCollaboratorActivityCollaborator
       'api::activity-collaborator.activity-collaborator'
     > &
       Schema.Attribute.Private;
+    metadata: Schema.Attribute.JSON;
     publishedAt: Schema.Attribute.DateTime;
     role: Schema.Attribute.Enumeration<
       ['admin', 'judge', 'speaker', 'instructor', 'other']
@@ -625,7 +626,6 @@ export interface ApiCompetitionBatchCompetitionBatch
       Schema.Attribute.DefaultTo<'none'>;
     batchImage: Schema.Attribute.Media<'images' | 'files'>;
     batchName: Schema.Attribute.String & Schema.Attribute.Required;
-    codeName: Schema.Attribute.String & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -710,6 +710,50 @@ export interface ApiCompetitionCriteriaCompetitionCriteria
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    weight: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+  };
+}
+
+export interface ApiCompetitionEvaluationCompetitionEvaluation
+  extends Struct.CollectionTypeSchema {
+  collectionName: 'competition_evaluations';
+  info: {
+    displayName: 'CompetitionEvaluation';
+    pluralName: 'competition-evaluations';
+    singularName: 'competition-evaluation';
+  };
+  options: {
+    draftAndPublish: false;
+  };
+  attributes: {
+    comments: Schema.Attribute.Text;
+    createdAt: Schema.Attribute.DateTime;
+    createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
+    criteria: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::competition-criteria.competition-criteria'
+    >;
+    locale: Schema.Attribute.String & Schema.Attribute.Private;
+    localizations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::competition-evaluation.competition-evaluation'
+    > &
+      Schema.Attribute.Private;
+    name: Schema.Attribute.String;
+    points: Schema.Attribute.Integer;
+    publishedAt: Schema.Attribute.DateTime;
+    result: Schema.Attribute.Relation<
+      'manyToOne',
+      'api::competition-result.competition-result'
+    >;
+    reviewer: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::activity-collaborator.activity-collaborator'
+    >;
+    updatedAt: Schema.Attribute.DateTime;
+    updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
+      Schema.Attribute.Private;
   };
 }
 
@@ -763,7 +807,7 @@ export interface ApiCompetitionResultCompetitionResult
     singularName: 'competition-result';
   };
   options: {
-    draftAndPublish: true;
+    draftAndPublish: false;
   };
   attributes: {
     batch: Schema.Attribute.Relation<
@@ -777,7 +821,10 @@ export interface ApiCompetitionResultCompetitionResult
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    evaluations: Schema.Attribute.Component<'competition.evaluation', true>;
+    evaluations: Schema.Attribute.Relation<
+      'oneToMany',
+      'api::competition-evaluation.competition-evaluation'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
@@ -790,11 +837,7 @@ export interface ApiCompetitionResultCompetitionResult
     >;
     order: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
-    reviewer: Schema.Attribute.Relation<
-      'oneToOne',
-      'api::activity-collaborator.activity-collaborator'
-    >;
-    totalPoints: Schema.Attribute.Integer;
+    totalPoints: Schema.Attribute.Decimal;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -813,6 +856,7 @@ export interface ApiCompetitionCompetition extends Struct.CollectionTypeSchema {
   };
   attributes: {
     activity: Schema.Attribute.Relation<'oneToOne', 'api::activity.activity'>;
+    batchLimits: Schema.Attribute.Component<'competition.batch-limits', true>;
     categories: Schema.Attribute.Relation<
       'oneToMany',
       'api::competition-category.competition-category'
@@ -836,15 +880,17 @@ export interface ApiCompetitionCompetition extends Struct.CollectionTypeSchema {
     modelsLimit: Schema.Attribute.Integer &
       Schema.Attribute.Required &
       Schema.Attribute.DefaultTo<5>;
+    operationType: Schema.Attribute.Enumeration<['average', 'sum']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'average'>;
     publishedAt: Schema.Attribute.DateTime;
     results: Schema.Attribute.Relation<
       'oneToMany',
       'api::competition-result.competition-result'
     >;
-    type: Schema.Attribute.Enumeration<
-      ['classicByOrder', 'classicByPoints', 'criteriaByCategory']
-    > &
-      Schema.Attribute.Required;
+    type: Schema.Attribute.Enumeration<['byOrder', 'byCriteria']> &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<'byCriteria'>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -1757,6 +1803,7 @@ declare module '@strapi/strapi' {
       'api::competition-batch.competition-batch': ApiCompetitionBatchCompetitionBatch;
       'api::competition-category.competition-category': ApiCompetitionCategoryCompetitionCategory;
       'api::competition-criteria.competition-criteria': ApiCompetitionCriteriaCompetitionCriteria;
+      'api::competition-evaluation.competition-evaluation': ApiCompetitionEvaluationCompetitionEvaluation;
       'api::competition-model.competition-model': ApiCompetitionModelCompetitionModel;
       'api::competition-result.competition-result': ApiCompetitionResultCompetitionResult;
       'api::competition.competition': ApiCompetitionCompetition;

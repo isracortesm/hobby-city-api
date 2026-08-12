@@ -24,10 +24,6 @@
         "none"
       ]
     },
-    "codeName": {
-      "type": "string",
-      "required": true
-    },
     "batchName": {
       "type": "string",
       "required": true

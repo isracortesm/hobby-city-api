@@ -1,15 +1,21 @@
 import type { Schema, Struct } from '@strapi/strapi';
 
-export interface CompetitionEvaluation extends Struct.ComponentSchema {
-  collectionName: 'components_competition_evaluations';
+export interface CompetitionBatchLimits extends Struct.ComponentSchema {
+  collectionName: 'components_competition_batch_limits';
   info: {
-    displayName: 'evaluation';
-    icon: 'feather';
+    displayName: 'batchLimits';
   };
   attributes: {
-    comments: Schema.Attribute.Text & Schema.Attribute.Required;
-    criteria: Schema.Attribute.String;
-    value: Schema.Attribute.Integer;
+    assigned: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<0>;
+    batch: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::competition-batch.competition-batch'
+    >;
+    limit: Schema.Attribute.Integer &
+      Schema.Attribute.Required &
+      Schema.Attribute.DefaultTo<1>;
   };
 }
 
@@ -41,7 +47,7 @@ export interface PlaceGeolocation extends Struct.ComponentSchema {
 declare module '@strapi/strapi' {
   export module Public {
     export interface ComponentSchemas {
-      'competition.evaluation': CompetitionEvaluation;
+      'competition.batch-limits': CompetitionBatchLimits;
       'place.address': PlaceAddress;
       'place.geolocation': PlaceGeolocation;
     }

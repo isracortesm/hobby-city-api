@@ -14,16 +14,25 @@
     "type": {
       "type": "enumeration",
       "required": true,
+      "default": "byCriteria",
       "enum": [
-        "classicByOrder",
-        "classicByPoints",
-        "criteriaByCategory"
+        "byOrder",
+        "byCriteria"
       ]
     },
     "hasPublicResults": {
       "type": "boolean",
       "required": true,
       "default": false
+    },
+    "operationType": {
+      "type": "enumeration",
+      "required": true,
+      "default": "average",
+      "enum": [
+        "average",
+        "sum"
+      ]
     },
     "modelsLimit": {
       "type": "integer",
@@ -51,6 +60,11 @@
       "type": "relation",
       "relation": "oneToMany",
       "target": "api::competition-category.competition-category"
+    },
+    "batchLimits": {
+      "type": "component",
+      "component": "competition.batch-limits",
+      "repeatable": true
     }
   }
 }

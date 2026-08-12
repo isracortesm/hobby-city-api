@@ -7,7 +7,7 @@
         "displayName": "CompetitionResult"
     },
     "options": {
-        "draftAndPublish": true
+        "draftAndPublish": false
     },
     "pluginOptions": {},
     "attributes": {
@@ -15,33 +15,29 @@
             "type": "integer"
         },
         "totalPoints": {
-            "type": "integer"
-        },
-        "evaluations": {
-            "type": "component",
-            "component": "competition.evaluation",
-            "repeatable": true
-        },
-        "model": {
-            "type": "relation",
-            "relation": "oneToOne",
-            "target": "api::competition-model.competition-model"
-        },
-        "reviewer": {
-            "type": "relation",
-            "relation": "oneToOne",
-            "target": "api::activity-collaborator.activity-collaborator"
-        },
-        "batch": {
-            "type": "relation",
-            "relation": "oneToOne",
-            "target": "api::competition-batch.competition-batch"
+            "type": "decimal"
         },
         "competition": {
             "type": "relation",
             "relation": "manyToOne",
             "target": "api::competition.competition",
             "inversedBy": "results"
+        },
+        "model": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::competition-model.competition-model"
+        },
+        "batch": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::competition-batch.competition-batch"
+        },
+        "evaluations": {
+            "type": "relation",
+            "relation": "oneToMany",
+            "target": "api::competition-evaluation.competition-evaluation",
+            "mappedBy": "result"
         }
     }
 }
