@@ -12,16 +12,38 @@ type BatchLike = {
   requiredValue?: number | null;
 };
 
-type ResultWithRelations = {
+type BatchLimitLike = {
+  id?: number;
+  limit?: number | null;
+  assigned?: number | null;
+  batch?: { id: number; requiredValue?: number | null } | null;
+};
+
+type EvaluationForResult = {
+  id: number;
+  points?: number | null;
+  updatedAt?: string | Date | null;
+  criteria?: { weight?: number | null } | null;
+};
+
+type ResultForAllocation = {
   id: number;
   totalPoints?: number | null;
+  order?: number | null;
   batch?: { id: number } | null;
-  competition?: { operationType?: 'average' | 'sum' | null } | null;
+  evaluations?: EvaluationForResult[] | null;
   model?: {
     category?: {
       batches?: BatchLike[] | null;
     } | null;
   } | null;
+};
+
+type ResultUpdate = {
+  id: number;
+  batch?: number | null;
+  totalPoints?: number;
+  order?: number;
 };
 
 type UserLike = {
@@ -37,7 +59,7 @@ type ReviewerLike = {
 };
 
 type EvaluationLike = {
-  criteria?: string | null;
+  name?: string | null;
   points?: number | null;
   comments?: string | null;
   reviewer?: ReviewerLike | null;
@@ -72,6 +94,53 @@ const PODIUM_BATCHES = new Set(['gold', 'silver', 'bronce']);
 
 function roundToTwo(value: number): number {
   return Math.round(value * 100) / 100;
+}
+
+function computeTotalPoints(
+  evaluations: EvaluationForResult[],
+  operationType: 'average' | 'sum'
+): number {
+  const rawSum = evaluations.reduce((acc, evaluation) => acc + (evaluation.points ?? 0), 0);
+  const count = evaluations.length;
+  const metric =
+    operationType === 'average' ? (count > 0 ? rawSum / count : 0) : rawSum;
+  return roundToTwo(metric);
+}
+
+function computeTieBreakKey(evaluations: EvaluationForResult[]): {
+  keyPoints: number;
+  keyWeight: number;
+  gradedAt: number;
+} {
+  const keyWeight = evaluations.reduce(
+    (acc, evaluation) => Math.max(acc, evaluation.criteria?.weight ?? 0),
+    0
+  );
+  const keyPoints = evaluations.reduce((acc, evaluation) => {
+    if ((evaluation.criteria?.weight ?? 0) === keyWeight) {
+      return Math.max(acc, evaluation.points ?? 0);
+    }
+    return acc;
+  }, 0);
+  const gradedAt = evaluations.reduce((acc, evaluation) => {
+    const time = new Date(evaluation.updatedAt ?? 0).getTime();
+    if (Number.isNaN(time)) return acc;
+    return Math.max(acc, time);
+  }, 0);
+  return { keyPoints, keyWeight, gradedAt };
+}
+
+async function applyResultUpdates(updates: ResultUpdate[]): Promise<void> {
+  for (const update of updates) {
+    const data: Record<string, unknown> = {};
+    if ('batch' in update) data.batch = update.batch;
+    if ('totalPoints' in update) data.totalPoints = update.totalPoints;
+    if ('order' in update) data.order = update.order;
+
+    await strapi.db
+      .query('api::competition-result.competition-result')
+      .update({ where: { id: update.id }, data });
+  }
 }
 
 function escapeHtml(value: unknown): string {
@@ -145,7 +214,7 @@ function buildResultEmailHtml(input: {
                 ${group.evaluations
                   .map(
                     (evaluation) =>
-                      `<li><strong>${escapeHtml(evaluation.criteria ?? 'Criterio')}:</strong> ${escapeHtml(
+                      `<li><strong>${escapeHtml(evaluation.name ?? 'Criterio')}:</strong> ${escapeHtml(
                         evaluation.points
                       )} pts${evaluation.comments ? ` — ${escapeHtml(evaluation.comments)}` : ''}</li>`
                   )
@@ -209,72 +278,140 @@ function buildResultEmailHtml(input: {
 export default factories.createCoreService(
   'api::competition-result.competition-result',
   ({ strapi }) => ({
+    async recomputeCompetition(competitionId: number): Promise<void> {
+      const competition = (await strapi.db
+        .query('api::competition.competition')
+        .findOne({
+          where: { id: competitionId },
+          populate: { batchLimits: { populate: { batch: true } } },
+        })) as {
+        id: number;
+        operationType?: 'average' | 'sum' | null;
+        batchLimits?: BatchLimitLike[] | null;
+      } | null;
+
+      if (!competition) return;
+
+      const operationType = competition.operationType ?? 'average';
+      const batchLimits = (competition.batchLimits ?? []).filter(
+        (entry) => entry?.batch?.id != null
+      );
+      const hasQuota = batchLimits.length > 0;
+
+      const results = (await strapi.db
+        .query('api::competition-result.competition-result')
+        .findMany({
+          where: { competition: competitionId },
+          populate: {
+            batch: true,
+            model: { populate: { category: { populate: { batches: true } } } },
+            evaluations: { populate: { criteria: true } },
+          },
+        })) as ResultForAllocation[];
+
+      if (results.length === 0) return;
+
+      const scored = results.map((result) => {
+        const evaluations = result.evaluations ?? [];
+        const tieBreak = computeTieBreakKey(evaluations);
+        return {
+          result,
+          totalPoints: computeTotalPoints(evaluations, operationType),
+          keyPoints: tieBreak.keyPoints,
+          keyWeight: tieBreak.keyWeight,
+          gradedAt: tieBreak.gradedAt,
+        };
+      });
+
+      scored.sort((a, b) => {
+        if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+        if (b.keyPoints !== a.keyPoints) return b.keyPoints - a.keyPoints;
+        if (b.keyWeight !== a.keyWeight) return b.keyWeight - a.keyWeight;
+        if (a.gradedAt !== b.gradedAt) return a.gradedAt - b.gradedAt;
+        return a.result.id - b.result.id;
+      });
+
+      const levels = hasQuota
+        ? batchLimits
+            .map((entry) => ({
+              batchId: entry.batch!.id,
+              requiredValue: entry.batch?.requiredValue ?? 0,
+              capacity: (entry.limit ?? 0) > 0 ? entry.limit! : 0,
+            }))
+            .sort((a, b) => b.requiredValue - a.requiredValue)
+        : [];
+
+      const capacity = new Map<number, number>();
+      for (const level of levels) capacity.set(level.batchId, level.capacity);
+
+      const assignedCount = new Map<number, number>();
+      const updates: ResultUpdate[] = [];
+
+      scored.forEach((scoredEntry, index) => {
+        const { result, totalPoints } = scoredEntry;
+
+        let assignedBatchId: number | null = null;
+
+        if (hasQuota) {
+          for (const level of levels) {
+            const remaining = capacity.get(level.batchId) ?? 0;
+            if (totalPoints >= level.requiredValue && remaining > 0) {
+              assignedBatchId = level.batchId;
+              capacity.set(level.batchId, remaining - 1);
+              break;
+            }
+          }
+        } else {
+          let bestRequiredValue = -Infinity;
+          for (const batch of result.model?.category?.batches ?? []) {
+            const requiredValue = batch.requiredValue ?? 0;
+            if (totalPoints >= requiredValue && requiredValue > bestRequiredValue) {
+              bestRequiredValue = requiredValue;
+              assignedBatchId = batch.id;
+            }
+          }
+        }
+
+        if (assignedBatchId !== null) {
+          assignedCount.set(assignedBatchId, (assignedCount.get(assignedBatchId) ?? 0) + 1);
+        }
+
+        const update: ResultUpdate = { id: result.id };
+        const currentBatchId = result.batch?.id ?? null;
+        if (assignedBatchId !== currentBatchId) update.batch = assignedBatchId;
+        if (roundToTwo(result.totalPoints ?? 0) !== totalPoints) {
+          update.totalPoints = totalPoints;
+        }
+        if ((result.order ?? 0) !== index + 1) update.order = index + 1;
+
+        if (Object.keys(update).length > 1) updates.push(update);
+      });
+
+      await applyResultUpdates(updates);
+
+      if (hasQuota) {
+        for (const entry of batchLimits) {
+          const count = assignedCount.get(entry.batch!.id) ?? 0;
+          if ((entry.assigned ?? 0) !== count) {
+            await strapi.db
+              .query('competition.batch-limits')
+              .update({ where: { id: entry.id }, data: { assigned: count } });
+          }
+        }
+      }
+    },
+
     async recomputeResult(resultId: number): Promise<void> {
       const result = (await strapi.db
         .query('api::competition-result.competition-result')
         .findOne({
           where: { id: resultId },
-          populate: {
-            competition: true,
-            model: { populate: { category: { populate: { batches: true } } } },
-            batch: true,
-          },
-        })) as ResultWithRelations | null;
+          populate: { competition: true },
+        })) as { competition?: { id?: number } | null } | null;
 
-      if (!result) return;
+      if (!result?.competition?.id) return;
 
-      const evaluations = await strapi.db
-        .query('api::competition-evaluation.competition-evaluation')
-        .findMany({ where: { result: resultId }, select: ['points'] });
-
-      const rawSum = evaluations.reduce(
-        (acc, evaluation) => acc + (evaluation.points ?? 0),
-        0
-      );
-      const count = evaluations.length;
-
-      const operationType = result.competition?.operationType ?? 'average';
-      const metric =
-        operationType === 'average'
-          ? count > 0
-            ? rawSum / count
-            : 0
-          : rawSum;
-
-      let bestBatchId: number | null = null;
-      let bestRequiredValue = -Infinity;
-
-      for (const batch of result.model?.category?.batches ?? []) {
-        const requiredValue = batch.requiredValue ?? 0;
-
-        if (metric >= requiredValue && requiredValue > bestRequiredValue) {
-          bestRequiredValue = requiredValue;
-          bestBatchId = batch.id;
-        }
-      }
-
-      const totalPoints = roundToTwo(metric);
-
-      const data: {
-        batch?: number | null;
-        totalPoints?: number;
-      } = {};
-
-      if (bestBatchId !== null && result.batch?.id !== bestBatchId) {
-        data.batch = bestBatchId;
-      } else if (bestBatchId === null && result.batch?.id != null) {
-        data.batch = null;
-      }
-
-      if (result.totalPoints !== totalPoints) {
-        data.totalPoints = totalPoints;
-      }
-
-      if (Object.keys(data).length === 0) return;
-
-      await strapi.db
-        .query('api::competition-result.competition-result')
-        .update({ where: { id: resultId }, data });
+      await this.recomputeCompetition(result.competition.id);
     },
 
     async getParticipantResults(input: {

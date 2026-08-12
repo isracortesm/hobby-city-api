@@ -626,7 +626,6 @@ export interface ApiCompetitionBatchCompetitionBatch
       Schema.Attribute.DefaultTo<'none'>;
     batchImage: Schema.Attribute.Media<'images' | 'files'>;
     batchName: Schema.Attribute.String & Schema.Attribute.Required;
-    codeName: Schema.Attribute.String & Schema.Attribute.Required;
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
@@ -711,6 +710,7 @@ export interface ApiCompetitionCriteriaCompetitionCriteria
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
+    weight: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
   };
 }
 
@@ -730,13 +730,17 @@ export interface ApiCompetitionEvaluationCompetitionEvaluation
     createdAt: Schema.Attribute.DateTime;
     createdBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;
-    criteria: Schema.Attribute.String;
+    criteria: Schema.Attribute.Relation<
+      'oneToOne',
+      'api::competition-criteria.competition-criteria'
+    >;
     locale: Schema.Attribute.String & Schema.Attribute.Private;
     localizations: Schema.Attribute.Relation<
       'oneToMany',
       'api::competition-evaluation.competition-evaluation'
     > &
       Schema.Attribute.Private;
+    name: Schema.Attribute.String;
     points: Schema.Attribute.Integer;
     publishedAt: Schema.Attribute.DateTime;
     result: Schema.Attribute.Relation<
@@ -852,6 +856,7 @@ export interface ApiCompetitionCompetition extends Struct.CollectionTypeSchema {
   };
   attributes: {
     activity: Schema.Attribute.Relation<'oneToOne', 'api::activity.activity'>;
+    batchLimits: Schema.Attribute.Component<'competition.batch-limits', true>;
     categories: Schema.Attribute.Relation<
       'oneToMany',
       'api::competition-category.competition-category'

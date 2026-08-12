@@ -14,7 +14,7 @@
             "name": "Apache 2.0",
             "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
         },
-        "x-generation-date": "2026-08-10T23:47:18.088Z"
+        "x-generation-date": "2026-08-12T00:11:24.158Z"
     },
     "x-strapi-config": {
         "plugins": [
@@ -24681,6 +24681,12 @@
                                     "example": "string or id"
                                 }
                             },
+                            "batchLimits": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/CompetitionBatchLimitsComponent"
+                                }
+                            },
                             "locale": {
                                 "type": "string"
                             },
@@ -28534,9 +28540,6 @@
                                                                     "none"
                                                                 ]
                                                             },
-                                                            "codeName": {
-                                                                "type": "string"
-                                                            },
                                                             "batchName": {
                                                                 "type": "string"
                                                             },
@@ -28807,7 +28810,7 @@
                                                                 "documentId": {
                                                                     "type": "string"
                                                                 },
-                                                                "criteria": {
+                                                                "name": {
                                                                     "type": "string"
                                                                 },
                                                                 "comments": {
@@ -28849,6 +28852,111 @@
                                                                         },
                                                                         "documentId": {
                                                                             "type": "string"
+                                                                        }
+                                                                    }
+                                                                },
+                                                                "criteria": {
+                                                                    "type": "object",
+                                                                    "properties": {
+                                                                        "id": {
+                                                                            "oneOf": [
+                                                                                {
+                                                                                    "type": "string"
+                                                                                },
+                                                                                {
+                                                                                    "type": "number"
+                                                                                }
+                                                                            ]
+                                                                        },
+                                                                        "documentId": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "name": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "codeName": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "description": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "maxPoints": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "weight": {
+                                                                            "type": "integer"
+                                                                        },
+                                                                        "createdAt": {
+                                                                            "type": "string",
+                                                                            "format": "date-time"
+                                                                        },
+                                                                        "updatedAt": {
+                                                                            "type": "string",
+                                                                            "format": "date-time"
+                                                                        },
+                                                                        "publishedAt": {
+                                                                            "type": "string",
+                                                                            "format": "date-time"
+                                                                        },
+                                                                        "createdBy": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "id": {
+                                                                                    "oneOf": [
+                                                                                        {
+                                                                                            "type": "string"
+                                                                                        },
+                                                                                        {
+                                                                                            "type": "number"
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                "documentId": {
+                                                                                    "type": "string"
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "updatedBy": {
+                                                                            "type": "object",
+                                                                            "properties": {
+                                                                                "id": {
+                                                                                    "oneOf": [
+                                                                                        {
+                                                                                            "type": "string"
+                                                                                        },
+                                                                                        {
+                                                                                            "type": "number"
+                                                                                        }
+                                                                                    ]
+                                                                                },
+                                                                                "documentId": {
+                                                                                    "type": "string"
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        "locale": {
+                                                                            "type": "string"
+                                                                        },
+                                                                        "localizations": {
+                                                                            "type": "array",
+                                                                            "items": {
+                                                                                "type": "object",
+                                                                                "properties": {
+                                                                                    "id": {
+                                                                                        "oneOf": [
+                                                                                            {
+                                                                                                "type": "string"
+                                                                                            },
+                                                                                            {
+                                                                                                "type": "number"
+                                                                                            }
+                                                                                        ]
+                                                                                    },
+                                                                                    "documentId": {
+                                                                                        "type": "string"
+                                                                                    }
+                                                                                }
+                                                                            }
                                                                         }
                                                                     }
                                                                 },
@@ -29064,90 +29172,6 @@
                                                                 },
                                                                 "documentId": {
                                                                     "type": "string"
-                                                                },
-                                                                "codeName": {
-                                                                    "type": "string"
-                                                                },
-                                                                "name": {
-                                                                    "type": "string"
-                                                                },
-                                                                "description": {
-                                                                    "type": "string"
-                                                                },
-                                                                "maxPoints": {
-                                                                    "type": "integer"
-                                                                },
-                                                                "createdAt": {
-                                                                    "type": "string",
-                                                                    "format": "date-time"
-                                                                },
-                                                                "updatedAt": {
-                                                                    "type": "string",
-                                                                    "format": "date-time"
-                                                                },
-                                                                "publishedAt": {
-                                                                    "type": "string",
-                                                                    "format": "date-time"
-                                                                },
-                                                                "createdBy": {
-                                                                    "type": "object",
-                                                                    "properties": {
-                                                                        "id": {
-                                                                            "oneOf": [
-                                                                                {
-                                                                                    "type": "string"
-                                                                                },
-                                                                                {
-                                                                                    "type": "number"
-                                                                                }
-                                                                            ]
-                                                                        },
-                                                                        "documentId": {
-                                                                            "type": "string"
-                                                                        }
-                                                                    }
-                                                                },
-                                                                "updatedBy": {
-                                                                    "type": "object",
-                                                                    "properties": {
-                                                                        "id": {
-                                                                            "oneOf": [
-                                                                                {
-                                                                                    "type": "string"
-                                                                                },
-                                                                                {
-                                                                                    "type": "number"
-                                                                                }
-                                                                            ]
-                                                                        },
-                                                                        "documentId": {
-                                                                            "type": "string"
-                                                                        }
-                                                                    }
-                                                                },
-                                                                "locale": {
-                                                                    "type": "string"
-                                                                },
-                                                                "localizations": {
-                                                                    "type": "array",
-                                                                    "items": {
-                                                                        "type": "object",
-                                                                        "properties": {
-                                                                            "id": {
-                                                                                "oneOf": [
-                                                                                    {
-                                                                                        "type": "string"
-                                                                                    },
-                                                                                    {
-                                                                                        "type": "number"
-                                                                                    }
-                                                                                ]
-                                                                            },
-                                                                            "documentId": {
-                                                                                "type": "string"
-                                                                            }
-                                                                        }
-                                                                    }
                                                                 }
                                                             }
                                                         }
@@ -29225,6 +29249,12 @@
                                                         }
                                                     }
                                                 }
+                                            }
+                                        },
+                                        "batchLimits": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/CompetitionBatchLimitsComponent"
                                             }
                                         },
                                         "createdAt": {
@@ -29472,6 +29502,12 @@
                             }
                         }
                     },
+                    "batchLimits": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/CompetitionBatchLimitsComponent"
+                        }
+                    },
                     "createdAt": {
                         "type": "string",
                         "format": "date-time"
@@ -29557,6 +29593,45 @@
                     }
                 }
             },
+            "CompetitionBatchLimitsComponent": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "oneOf": [
+                            {
+                                "type": "string"
+                            },
+                            {
+                                "type": "number"
+                            }
+                        ]
+                    },
+                    "limit": {
+                        "type": "integer"
+                    },
+                    "assigned": {
+                        "type": "integer"
+                    },
+                    "batch": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "oneOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "number"
+                                    }
+                                ]
+                            },
+                            "documentId": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
             "CompetitionBatchRequest": {
                 "type": "object",
                 "required": [
@@ -29566,7 +29641,6 @@
                     "data": {
                         "required": [
                             "batch",
-                            "codeName",
                             "batchName"
                         ],
                         "type": "object",
@@ -29581,9 +29655,6 @@
                                     "mention",
                                     "none"
                                 ]
-                            },
-                            "codeName": {
-                                "type": "string"
                             },
                             "batchName": {
                                 "type": "string"
@@ -29662,7 +29733,6 @@
                 "type": "object",
                 "required": [
                     "batch",
-                    "codeName",
                     "batchName"
                 ],
                 "properties": {
@@ -29689,9 +29759,6 @@
                             "mention",
                             "none"
                         ]
-                    },
-                    "codeName": {
-                        "type": "string"
                     },
                     "batchName": {
                         "type": "string"
@@ -30893,9 +30960,6 @@
                                         "none"
                                     ]
                                 },
-                                "codeName": {
-                                    "type": "string"
-                                },
                                 "batchName": {
                                     "type": "string"
                                 },
@@ -31317,9 +31381,6 @@
                                         "mention",
                                         "none"
                                     ]
-                                },
-                                "codeName": {
-                                    "type": "string"
                                 },
                                 "batchName": {
                                     "type": "string"
@@ -32534,16 +32595,19 @@
                                 "documentId": {
                                     "type": "string"
                                 },
-                                "codeName": {
+                                "name": {
                                     "type": "string"
                                 },
-                                "name": {
+                                "codeName": {
                                     "type": "string"
                                 },
                                 "description": {
                                     "type": "string"
                                 },
                                 "maxPoints": {
+                                    "type": "integer"
+                                },
+                                "weight": {
                                     "type": "integer"
                                 },
                                 "createdAt": {
@@ -32834,22 +32898,25 @@
                 "properties": {
                     "data": {
                         "required": [
-                            "codeName",
                             "name",
+                            "codeName",
                             "maxPoints"
                         ],
                         "type": "object",
                         "properties": {
-                            "codeName": {
+                            "name": {
                                 "type": "string"
                             },
-                            "name": {
+                            "codeName": {
                                 "type": "string"
                             },
                             "description": {
                                 "type": "string"
                             },
                             "maxPoints": {
+                                "type": "integer"
+                            },
+                            "weight": {
                                 "type": "integer"
                             },
                             "locale": {
@@ -32911,8 +32978,8 @@
             "CompetitionCriteria": {
                 "type": "object",
                 "required": [
-                    "codeName",
                     "name",
+                    "codeName",
                     "maxPoints"
                 ],
                 "properties": {
@@ -32929,16 +32996,19 @@
                     "documentId": {
                         "type": "string"
                     },
-                    "codeName": {
+                    "name": {
                         "type": "string"
                     },
-                    "name": {
+                    "codeName": {
                         "type": "string"
                     },
                     "description": {
                         "type": "string"
                     },
                     "maxPoints": {
+                        "type": "integer"
+                    },
+                    "weight": {
                         "type": "integer"
                     },
                     "createdAt": {
@@ -33657,16 +33727,19 @@
                                 "documentId": {
                                     "type": "string"
                                 },
-                                "codeName": {
+                                "name": {
                                     "type": "string"
                                 },
-                                "name": {
+                                "codeName": {
                                     "type": "string"
                                 },
                                 "description": {
                                     "type": "string"
                                 },
                                 "maxPoints": {
+                                    "type": "integer"
+                                },
+                                "weight": {
                                     "type": "integer"
                                 },
                                 "createdAt": {
@@ -33766,7 +33839,7 @@
                     "data": {
                         "type": "object",
                         "properties": {
-                            "criteria": {
+                            "name": {
                                 "type": "string"
                             },
                             "comments": {
@@ -33787,6 +33860,17 @@
                                 "example": "string or id"
                             },
                             "result": {
+                                "oneOf": [
+                                    {
+                                        "type": "integer"
+                                    },
+                                    {
+                                        "type": "string"
+                                    }
+                                ],
+                                "example": "string or id"
+                            },
+                            "criteria": {
                                 "oneOf": [
                                     {
                                         "type": "integer"
@@ -33869,7 +33953,7 @@
                     "documentId": {
                         "type": "string"
                     },
-                    "criteria": {
+                    "name": {
                         "type": "string"
                     },
                     "comments": {
@@ -37652,9 +37736,6 @@
                                                                             "none"
                                                                         ]
                                                                     },
-                                                                    "codeName": {
-                                                                        "type": "string"
-                                                                    },
                                                                     "batchName": {
                                                                         "type": "string"
                                                                     },
@@ -37926,16 +38007,19 @@
                                                                     "documentId": {
                                                                         "type": "string"
                                                                     },
-                                                                    "codeName": {
+                                                                    "name": {
                                                                         "type": "string"
                                                                     },
-                                                                    "name": {
+                                                                    "codeName": {
                                                                         "type": "string"
                                                                     },
                                                                     "description": {
                                                                         "type": "string"
                                                                     },
                                                                     "maxPoints": {
+                                                                        "type": "integer"
+                                                                    },
+                                                                    "weight": {
                                                                         "type": "integer"
                                                                     },
                                                                     "createdAt": {
@@ -38204,6 +38288,12 @@
                                             }
                                         }
                                     },
+                                    "batchLimits": {
+                                        "type": "array",
+                                        "items": {
+                                            "$ref": "#/components/schemas/CompetitionBatchLimitsComponent"
+                                        }
+                                    },
                                     "createdAt": {
                                         "type": "string",
                                         "format": "date-time"
@@ -38332,7 +38422,7 @@
                                         "documentId": {
                                             "type": "string"
                                         },
-                                        "criteria": {
+                                        "name": {
                                             "type": "string"
                                         },
                                         "comments": {
@@ -38360,6 +38450,24 @@
                                             }
                                         },
                                         "result": {
+                                            "type": "object",
+                                            "properties": {
+                                                "id": {
+                                                    "oneOf": [
+                                                        {
+                                                            "type": "string"
+                                                        },
+                                                        {
+                                                            "type": "number"
+                                                        }
+                                                    ]
+                                                },
+                                                "documentId": {
+                                                    "type": "string"
+                                                }
+                                            }
+                                        },
+                                        "criteria": {
                                             "type": "object",
                                             "properties": {
                                                 "id": {
@@ -38523,6 +38631,24 @@
                                         }
                                     }
                                 }
+                            }
+                        }
+                    },
+                    "criteria": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "oneOf": [
+                                    {
+                                        "type": "string"
+                                    },
+                                    {
+                                        "type": "number"
+                                    }
+                                ]
+                            },
+                            "documentId": {
+                                "type": "string"
                             }
                         }
                     },
@@ -42469,9 +42595,6 @@
                                                                     "none"
                                                                 ]
                                                             },
-                                                            "codeName": {
-                                                                "type": "string"
-                                                            },
                                                             "batchName": {
                                                                 "type": "string"
                                                             },
@@ -42743,16 +42866,19 @@
                                                             "documentId": {
                                                                 "type": "string"
                                                             },
-                                                            "codeName": {
+                                                            "name": {
                                                                 "type": "string"
                                                             },
-                                                            "name": {
+                                                            "codeName": {
                                                                 "type": "string"
                                                             },
                                                             "description": {
                                                                 "type": "string"
                                                             },
                                                             "maxPoints": {
+                                                                "type": "integer"
+                                                            },
+                                                            "weight": {
                                                                 "type": "integer"
                                                             },
                                                             "createdAt": {
@@ -43076,7 +43202,7 @@
                                                     "documentId": {
                                                         "type": "string"
                                                     },
-                                                    "criteria": {
+                                                    "name": {
                                                         "type": "string"
                                                     },
                                                     "comments": {
@@ -43104,6 +43230,24 @@
                                                         }
                                                     },
                                                     "result": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "oneOf": [
+                                                                    {
+                                                                        "type": "string"
+                                                                    },
+                                                                    {
+                                                                        "type": "number"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "documentId": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "criteria": {
                                                         "type": "object",
                                                         "properties": {
                                                             "id": {
@@ -43290,6 +43434,12 @@
                                             "type": "string"
                                         }
                                     }
+                                }
+                            },
+                            "batchLimits": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/CompetitionBatchLimitsComponent"
                                 }
                             },
                             "createdAt": {
@@ -47380,9 +47530,6 @@
                                                                     "none"
                                                                 ]
                                                             },
-                                                            "codeName": {
-                                                                "type": "string"
-                                                            },
                                                             "batchName": {
                                                                 "type": "string"
                                                             },
@@ -47654,16 +47801,19 @@
                                                             "documentId": {
                                                                 "type": "string"
                                                             },
-                                                            "codeName": {
+                                                            "name": {
                                                                 "type": "string"
                                                             },
-                                                            "name": {
+                                                            "codeName": {
                                                                 "type": "string"
                                                             },
                                                             "description": {
                                                                 "type": "string"
                                                             },
                                                             "maxPoints": {
+                                                                "type": "integer"
+                                                            },
+                                                            "weight": {
                                                                 "type": "integer"
                                                             },
                                                             "createdAt": {
@@ -47987,7 +48137,7 @@
                                                     "documentId": {
                                                         "type": "string"
                                                     },
-                                                    "criteria": {
+                                                    "name": {
                                                         "type": "string"
                                                     },
                                                     "comments": {
@@ -48015,6 +48165,24 @@
                                                         }
                                                     },
                                                     "result": {
+                                                        "type": "object",
+                                                        "properties": {
+                                                            "id": {
+                                                                "oneOf": [
+                                                                    {
+                                                                        "type": "string"
+                                                                    },
+                                                                    {
+                                                                        "type": "number"
+                                                                    }
+                                                                ]
+                                                            },
+                                                            "documentId": {
+                                                                "type": "string"
+                                                            }
+                                                        }
+                                                    },
+                                                    "criteria": {
                                                         "type": "object",
                                                         "properties": {
                                                             "id": {
@@ -48201,6 +48369,12 @@
                                             "type": "string"
                                         }
                                     }
+                                }
+                            },
+                            "batchLimits": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/CompetitionBatchLimitsComponent"
                                 }
                             },
                             "createdAt": {

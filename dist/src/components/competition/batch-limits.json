@@ -1,0 +1,25 @@
+{
+    "collectionName": "components_competition_batch_limits",
+    "info": {
+        "displayName": "batchLimits"
+    },
+    "options": {},
+    "attributes": {
+        "limit": {
+            "type": "integer",
+            "required": true,
+            "default": 1
+        },
+        "assigned": {
+            "type": "integer",
+            "required": true,
+            "default": 0
+        },
+        "batch": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::competition-batch.competition-batch"
+        }
+    },
+    "config": {}
+}

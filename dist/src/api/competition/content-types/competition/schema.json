@@ -60,6 +60,11 @@
             "type": "relation",
             "relation": "oneToMany",
             "target": "api::competition-category.competition-category"
+        },
+        "batchLimits": {
+            "type": "component",
+            "component": "competition.batch-limits",
+            "repeatable": true
         }
     }
 }

@@ -11,7 +11,7 @@
     },
     "pluginOptions": {},
     "attributes": {
-        "criteria": {
+        "name": {
             "type": "string"
         },
         "comments": {
@@ -30,6 +30,11 @@
             "relation": "manyToOne",
             "target": "api::competition-result.competition-result",
             "inversedBy": "evaluations"
+        },
+        "criteria": {
+            "type": "relation",
+            "relation": "oneToOne",
+            "target": "api::competition-criteria.competition-criteria"
         }
     }
 }
