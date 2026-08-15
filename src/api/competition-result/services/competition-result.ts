@@ -152,7 +152,12 @@ function escapeHtml(value: unknown): string {
     .replace(/'/g, '&#39;');
 }
 
-function sendEmail(options: { to: string; subject: string; html: string }): Promise<unknown> {
+function sendEmail(options: {
+  to: string;
+  cc?: string;
+  subject: string;
+  html: string;
+}): Promise<unknown> {
   return strapi.plugin('email').service('email').send(options);
 }
 
@@ -439,8 +444,9 @@ export default factories.createCoreService(
     async sendResultEmailToParticipant(input: {
       participantDocumentId: string;
       competitionDocumentId: string;
+      cc?: string;
     }): Promise<{ sentTo: string; resultsCount: number }> {
-      const { participantDocumentId, competitionDocumentId } = input;
+      const { participantDocumentId, competitionDocumentId, cc } = input;
 
       const user = (await strapi.db
         .query('plugin::users-permissions.user')
@@ -463,7 +469,7 @@ export default factories.createCoreService(
       }
 
       const { subject, html } = buildResultEmailHtml({ user, results });
-      await sendEmail({ to: user.email, subject, html });
+      await sendEmail({ to: user.email, cc, subject, html });
 
       return { sentTo: user.email, resultsCount: results.length };
     },
