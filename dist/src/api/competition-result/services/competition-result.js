@@ -7,6 +7,19 @@ const strapi_1 = require("@strapi/strapi");
 const utils_1 = require("@strapi/utils");
 const { ApplicationError } = utils_1.errors;
 const PODIUM_BATCHES = new Set(['gold', 'silver', 'bronce']);
+const recomputeInFlight = new Set();
+async function mapLimit(items, limit, fn) {
+    const results = new Array(items.length);
+    let index = 0;
+    async function worker() {
+        while (index < items.length) {
+            const i = index++;
+            results[i] = await fn(items[i], i);
+        }
+    }
+    await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+    return results;
+}
 function roundToTwo(value) {
     return Math.round(value * 100) / 100;
 }
@@ -164,119 +177,132 @@ function buildResultEmailHtml(input) {
 }
 exports.default = strapi_1.factories.createCoreService('api::competition-result.competition-result', ({ strapi }) => ({
     async recomputeCompetition(competitionId) {
-        var _a, _b, _c, _d;
-        const competition = (await strapi.db
-            .query('api::competition.competition')
-            .findOne({
-            where: { id: competitionId },
-            populate: { batchLimits: { populate: { batch: true } } },
-        }));
-        if (!competition)
+        if (recomputeInFlight.has(competitionId))
             return;
-        const operationType = (_a = competition.operationType) !== null && _a !== void 0 ? _a : 'average';
-        const batchLimits = ((_b = competition.batchLimits) !== null && _b !== void 0 ? _b : []).filter((entry) => { var _a; return ((_a = entry === null || entry === void 0 ? void 0 : entry.batch) === null || _a === void 0 ? void 0 : _a.id) != null; });
-        const hasQuota = batchLimits.length > 0;
-        const results = (await strapi.db
-            .query('api::competition-result.competition-result')
-            .findMany({
-            where: { competition: competitionId },
-            populate: {
-                batch: true,
-                model: { populate: { category: { populate: { batches: true } } } },
-                evaluations: { populate: { criteria: true } },
-            },
-        }));
-        if (results.length === 0)
-            return;
-        const scored = results.map((result) => {
-            var _a;
-            const evaluations = (_a = result.evaluations) !== null && _a !== void 0 ? _a : [];
-            const tieBreak = computeTieBreakKey(evaluations);
-            return {
-                result,
-                totalPoints: computeTotalPoints(evaluations, operationType),
-                keyPoints: tieBreak.keyPoints,
-                keyWeight: tieBreak.keyWeight,
-                gradedAt: tieBreak.gradedAt,
-            };
-        });
-        scored.sort((a, b) => {
-            if (b.totalPoints !== a.totalPoints)
-                return b.totalPoints - a.totalPoints;
-            if (b.keyPoints !== a.keyPoints)
-                return b.keyPoints - a.keyPoints;
-            if (b.keyWeight !== a.keyWeight)
-                return b.keyWeight - a.keyWeight;
-            if (a.gradedAt !== b.gradedAt)
-                return a.gradedAt - b.gradedAt;
-            return a.result.id - b.result.id;
-        });
-        const levels = hasQuota
-            ? batchLimits
-                .map((entry) => {
-                var _a, _b, _c;
-                return ({
-                    batchId: entry.batch.id,
-                    requiredValue: (_b = (_a = entry.batch) === null || _a === void 0 ? void 0 : _a.requiredValue) !== null && _b !== void 0 ? _b : 0,
-                    capacity: ((_c = entry.limit) !== null && _c !== void 0 ? _c : 0) > 0 ? entry.limit : 0,
+        recomputeInFlight.add(competitionId);
+        try {
+            await strapi.db.transaction(async ({ trx }) => {
+                var _a, _b, _c, _d;
+                // Serializa recomputes de la misma competencia entre instancias
+                // (compatible con pgbouncer en modo transacción: se libera al commitear).
+                await trx.raw('SELECT pg_advisory_xact_lock(?)', [competitionId]);
+                const competition = (await strapi.db
+                    .query('api::competition.competition')
+                    .findOne({
+                    where: { id: competitionId },
+                    populate: { batchLimits: { populate: { batch: true } } },
+                }));
+                if (!competition)
+                    return;
+                const operationType = (_a = competition.operationType) !== null && _a !== void 0 ? _a : 'average';
+                const batchLimits = ((_b = competition.batchLimits) !== null && _b !== void 0 ? _b : []).filter((entry) => { var _a; return ((_a = entry === null || entry === void 0 ? void 0 : entry.batch) === null || _a === void 0 ? void 0 : _a.id) != null; });
+                const hasQuota = batchLimits.length > 0;
+                const results = (await strapi.db
+                    .query('api::competition-result.competition-result')
+                    .findMany({
+                    where: { competition: competitionId },
+                    populate: {
+                        batch: true,
+                        model: { populate: { category: { populate: { batches: true } } } },
+                        evaluations: { populate: { criteria: true } },
+                    },
+                }));
+                if (results.length === 0)
+                    return;
+                const scored = results.map((result) => {
+                    var _a;
+                    const evaluations = (_a = result.evaluations) !== null && _a !== void 0 ? _a : [];
+                    const tieBreak = computeTieBreakKey(evaluations);
+                    return {
+                        result,
+                        totalPoints: computeTotalPoints(evaluations, operationType),
+                        keyPoints: tieBreak.keyPoints,
+                        keyWeight: tieBreak.keyWeight,
+                        gradedAt: tieBreak.gradedAt,
+                    };
                 });
-            })
-                .sort((a, b) => b.requiredValue - a.requiredValue)
-            : [];
-        const capacity = new Map();
-        for (const level of levels)
-            capacity.set(level.batchId, level.capacity);
-        const assignedCount = new Map();
-        const updates = [];
-        scored.forEach((scoredEntry, index) => {
-            var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
-            const { result, totalPoints } = scoredEntry;
-            let assignedBatchId = null;
-            if (hasQuota) {
-                for (const level of levels) {
-                    const remaining = (_a = capacity.get(level.batchId)) !== null && _a !== void 0 ? _a : 0;
-                    if (totalPoints >= level.requiredValue && remaining > 0) {
-                        assignedBatchId = level.batchId;
-                        capacity.set(level.batchId, remaining - 1);
-                        break;
+                scored.sort((a, b) => {
+                    if (b.totalPoints !== a.totalPoints)
+                        return b.totalPoints - a.totalPoints;
+                    if (b.keyPoints !== a.keyPoints)
+                        return b.keyPoints - a.keyPoints;
+                    if (b.keyWeight !== a.keyWeight)
+                        return b.keyWeight - a.keyWeight;
+                    if (a.gradedAt !== b.gradedAt)
+                        return a.gradedAt - b.gradedAt;
+                    return a.result.id - b.result.id;
+                });
+                const levels = hasQuota
+                    ? batchLimits
+                        .map((entry) => {
+                        var _a, _b, _c;
+                        return ({
+                            batchId: entry.batch.id,
+                            requiredValue: (_b = (_a = entry.batch) === null || _a === void 0 ? void 0 : _a.requiredValue) !== null && _b !== void 0 ? _b : 0,
+                            capacity: ((_c = entry.limit) !== null && _c !== void 0 ? _c : 0) > 0 ? entry.limit : 0,
+                        });
+                    })
+                        .sort((a, b) => b.requiredValue - a.requiredValue)
+                    : [];
+                const capacity = new Map();
+                for (const level of levels)
+                    capacity.set(level.batchId, level.capacity);
+                const assignedCount = new Map();
+                const updates = [];
+                scored.forEach((scoredEntry, index) => {
+                    var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+                    const { result, totalPoints } = scoredEntry;
+                    let assignedBatchId = null;
+                    if (hasQuota) {
+                        for (const level of levels) {
+                            const remaining = (_a = capacity.get(level.batchId)) !== null && _a !== void 0 ? _a : 0;
+                            if (totalPoints >= level.requiredValue && remaining > 0) {
+                                assignedBatchId = level.batchId;
+                                capacity.set(level.batchId, remaining - 1);
+                                break;
+                            }
+                        }
+                    }
+                    else {
+                        let bestRequiredValue = -Infinity;
+                        for (const batch of (_d = (_c = (_b = result.model) === null || _b === void 0 ? void 0 : _b.category) === null || _c === void 0 ? void 0 : _c.batches) !== null && _d !== void 0 ? _d : []) {
+                            const requiredValue = (_e = batch.requiredValue) !== null && _e !== void 0 ? _e : 0;
+                            if (totalPoints >= requiredValue && requiredValue > bestRequiredValue) {
+                                bestRequiredValue = requiredValue;
+                                assignedBatchId = batch.id;
+                            }
+                        }
+                    }
+                    if (assignedBatchId !== null) {
+                        assignedCount.set(assignedBatchId, ((_f = assignedCount.get(assignedBatchId)) !== null && _f !== void 0 ? _f : 0) + 1);
+                    }
+                    const update = { id: result.id };
+                    const currentBatchId = (_h = (_g = result.batch) === null || _g === void 0 ? void 0 : _g.id) !== null && _h !== void 0 ? _h : null;
+                    if (assignedBatchId !== currentBatchId)
+                        update.batch = assignedBatchId;
+                    if (roundToTwo((_j = result.totalPoints) !== null && _j !== void 0 ? _j : 0) !== totalPoints) {
+                        update.totalPoints = totalPoints;
+                    }
+                    if (((_k = result.order) !== null && _k !== void 0 ? _k : 0) !== index + 1)
+                        update.order = index + 1;
+                    if (Object.keys(update).length > 1)
+                        updates.push(update);
+                });
+                await applyResultUpdates(updates);
+                if (hasQuota) {
+                    for (const entry of batchLimits) {
+                        const count = (_c = assignedCount.get(entry.batch.id)) !== null && _c !== void 0 ? _c : 0;
+                        if (((_d = entry.assigned) !== null && _d !== void 0 ? _d : 0) !== count) {
+                            await strapi.db
+                                .query('competition.batch-limits')
+                                .update({ where: { id: entry.id }, data: { assigned: count } });
+                        }
                     }
                 }
-            }
-            else {
-                let bestRequiredValue = -Infinity;
-                for (const batch of (_d = (_c = (_b = result.model) === null || _b === void 0 ? void 0 : _b.category) === null || _c === void 0 ? void 0 : _c.batches) !== null && _d !== void 0 ? _d : []) {
-                    const requiredValue = (_e = batch.requiredValue) !== null && _e !== void 0 ? _e : 0;
-                    if (totalPoints >= requiredValue && requiredValue > bestRequiredValue) {
-                        bestRequiredValue = requiredValue;
-                        assignedBatchId = batch.id;
-                    }
-                }
-            }
-            if (assignedBatchId !== null) {
-                assignedCount.set(assignedBatchId, ((_f = assignedCount.get(assignedBatchId)) !== null && _f !== void 0 ? _f : 0) + 1);
-            }
-            const update = { id: result.id };
-            const currentBatchId = (_h = (_g = result.batch) === null || _g === void 0 ? void 0 : _g.id) !== null && _h !== void 0 ? _h : null;
-            if (assignedBatchId !== currentBatchId)
-                update.batch = assignedBatchId;
-            if (roundToTwo((_j = result.totalPoints) !== null && _j !== void 0 ? _j : 0) !== totalPoints) {
-                update.totalPoints = totalPoints;
-            }
-            if (((_k = result.order) !== null && _k !== void 0 ? _k : 0) !== index + 1)
-                update.order = index + 1;
-            if (Object.keys(update).length > 1)
-                updates.push(update);
-        });
-        await applyResultUpdates(updates);
-        if (hasQuota) {
-            for (const entry of batchLimits) {
-                const count = (_c = assignedCount.get(entry.batch.id)) !== null && _c !== void 0 ? _c : 0;
-                if (((_d = entry.assigned) !== null && _d !== void 0 ? _d : 0) !== count) {
-                    await strapi.db
-                        .query('competition.batch-limits')
-                        .update({ where: { id: entry.id }, data: { assigned: count } });
-                }
-            }
+            });
+        }
+        finally {
+            recomputeInFlight.delete(competitionId);
         }
     },
     async recomputeResult(resultId) {
@@ -309,7 +335,7 @@ exports.default = strapi_1.factories.createCoreService('api::competition-result.
         }));
     },
     async sendResultEmailToParticipant(input) {
-        const { participantDocumentId, competitionDocumentId } = input;
+        const { participantDocumentId, competitionDocumentId, cc } = input;
         const user = (await strapi.db
             .query('plugin::users-permissions.user')
             .findOne({ where: { documentId: participantDocumentId } }));
@@ -327,11 +353,11 @@ exports.default = strapi_1.factories.createCoreService('api::competition-result.
             throw new ApplicationError('The participant has no results in this competition');
         }
         const { subject, html } = buildResultEmailHtml({ user, results });
-        await sendEmail({ to: user.email, subject, html });
+        await sendEmail({ to: user.email, cc, subject, html });
         return { sentTo: user.email, resultsCount: results.length };
     },
     async sendResultEmailsToAll(input) {
-        var _a, _b;
+        var _a;
         const { competitionDocumentId } = input;
         const results = (await strapi.db
             .query('api::competition-result.competition-result')
@@ -356,7 +382,9 @@ exports.default = strapi_1.factories.createCoreService('api::competition-result.
             byUser.get(key).results.push(result);
         }
         const summary = { total: byUser.size, sent: 0, failed: 0, errors: [] };
-        for (const { user, results: userResults } of byUser.values()) {
+        const recipients = Array.from(byUser.values());
+        await mapLimit(recipients, 5, async ({ user, results: userResults }) => {
+            var _a;
             try {
                 const { subject, html } = buildResultEmailHtml({ user, results: userResults });
                 await sendEmail({ to: user.email, subject, html });
@@ -366,10 +394,10 @@ exports.default = strapi_1.factories.createCoreService('api::competition-result.
                 summary.failed += 1;
                 summary.errors.push({
                     participant: user.email,
-                    error: (_b = error === null || error === void 0 ? void 0 : error.message) !== null && _b !== void 0 ? _b : String(error),
+                    error: (_a = error === null || error === void 0 ? void 0 : error.message) !== null && _a !== void 0 ? _a : String(error),
                 });
             }
-        }
+        });
         return summary;
     },
 }));

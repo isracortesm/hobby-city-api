@@ -16,6 +16,7 @@ exports.default = strapi_1.factories.createCoreController('api::competition-resu
         const body = readBody(ctx);
         const participant = body.participant;
         const competition = body.competition;
+        const cc = body.cc;
         if (!participant) {
             throw new ValidationError('Missing "participant" (user documentId) in the request body');
         }
@@ -26,6 +27,7 @@ exports.default = strapi_1.factories.createCoreController('api::competition-resu
         const result = await service.sendResultEmailToParticipant({
             participantDocumentId: participant,
             competitionDocumentId: competition,
+            cc,
         });
         ctx.body = { data: result };
     },

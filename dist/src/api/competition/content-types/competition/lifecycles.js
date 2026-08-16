@@ -19,7 +19,12 @@ exports.default = {
         const competitionId = extractNumericId((_c = event.result) === null || _c === void 0 ? void 0 : _c.id);
         if (!competitionId)
             return;
-        const service = strapi.service('api::competition-result.competition-result');
-        await service.recomputeCompetition(competitionId);
+        try {
+            const service = strapi.service('api::competition-result.competition-result');
+            await service.recomputeCompetition(competitionId);
+        }
+        catch (error) {
+            strapi.log.error('[competition] recomputeCompetition failed', { competitionId, error });
+        }
     },
 };

@@ -48,31 +48,22 @@ export default {
       throw new ApplicationError('The activity is not published yet');
     }
 
-    if (activity.participantsCount >= activity.capacity && activity.capacity > 0) {
+    // Incremento atómico con guarda de capacidad (una sola sentencia => sin carreras).
+    // Con capacity = 0 la actividad es ilimitada. Corre dentro de la transacción del
+    // create (rollback automático si el participante no llega a insertarse).
+    const affected = await strapi.db.transaction(async ({ trx }) =>
+      trx('activities')
+        .where({ id: activityId })
+        .whereRaw('(capacity = 0 OR participants_count < capacity)')
+        .increment('participants_count', 1)
+    );
+
+    if (affected === 0) {
       throw new ApplicationError('The activity is already full');
     }
 
     event.state.activityId = activityId;
     event.state.activityDocumentId = activity.documentId;
-  },
-
-  async afterCreate(event: any) {
-    const { activityId, activityDocumentId } = event.state ?? {};
-    if (!activityId || !activityDocumentId) return;
-
-    const count = await strapi.db
-      .query('api::activity-participant.activity-participant')
-      .count({ where: { activity: activityId } });
-
-    for (const status of ['draft', 'published'] as const) {
-      try {
-        await strapi.documents('api::activity.activity').update({
-          documentId: activityDocumentId,
-          data: { participantsCount: count },
-          status,
-        });
-      } catch { /* skip if status doesn't exist */ }
-    }
   },
 
   async beforeDelete(event: any) {
@@ -90,21 +81,15 @@ export default {
   },
 
   async afterDelete(event: any) {
-    const { activityId, activityDocumentId } = event.state ?? {};
-    if (!activityId || !activityDocumentId) return;
+    const { activityId } = event.state ?? {};
+    if (!activityId) return;
 
-    const count = await strapi.db
-      .query('api::activity-participant.activity-participant')
-      .count({ where: { activity: activityId } });
-
-    for (const status of ['draft', 'published'] as const) {
-      try {
-        await strapi.documents('api::activity.activity').update({
-          documentId: activityDocumentId,
-          data: { participantsCount: count },
-          status,
-        });
-      } catch { /* skip if status doesn't exist */ }
-    }
+    // Decremento atómico (no puede bajar de 0), dentro de la transacción del delete.
+    await strapi.db.transaction(async ({ trx }) =>
+      trx('activities')
+        .where({ id: activityId })
+        .whereRaw('participants_count > 0')
+        .decrement('participants_count', 1)
+    );
   },
 };

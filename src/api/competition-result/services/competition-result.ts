@@ -92,6 +92,27 @@ type ResultEmailLike = {
 
 const PODIUM_BATCHES = new Set(['gold', 'silver', 'bronce']);
 
+const recomputeInFlight = new Set<number>();
+
+async function mapLimit<T, R>(
+  items: T[],
+  limit: number,
+  fn: (item: T, index: number) => Promise<R>
+): Promise<R[]> {
+  const results: R[] = new Array(items.length);
+  let index = 0;
+
+  async function worker() {
+    while (index < items.length) {
+      const i = index++;
+      results[i] = await fn(items[i], i);
+    }
+  }
+
+  await Promise.all(Array.from({ length: Math.min(limit, items.length) }, worker));
+  return results;
+}
+
 function roundToTwo(value: number): number {
   return Math.round(value * 100) / 100;
 }
@@ -284,125 +305,138 @@ export default factories.createCoreService(
   'api::competition-result.competition-result',
   ({ strapi }) => ({
     async recomputeCompetition(competitionId: number): Promise<void> {
-      const competition = (await strapi.db
-        .query('api::competition.competition')
-        .findOne({
-          where: { id: competitionId },
-          populate: { batchLimits: { populate: { batch: true } } },
-        })) as {
-        id: number;
-        operationType?: 'average' | 'sum' | null;
-        batchLimits?: BatchLimitLike[] | null;
-      } | null;
+      if (recomputeInFlight.has(competitionId)) return;
+      recomputeInFlight.add(competitionId);
 
-      if (!competition) return;
+      try {
+        await strapi.db.transaction(async ({ trx }) => {
+          // Serializa recomputes de la misma competencia entre instancias
+          // (compatible con pgbouncer en modo transacción: se libera al commitear).
+          await trx.raw('SELECT pg_advisory_xact_lock(?)', [competitionId]);
 
-      const operationType = competition.operationType ?? 'average';
-      const batchLimits = (competition.batchLimits ?? []).filter(
-        (entry) => entry?.batch?.id != null
-      );
-      const hasQuota = batchLimits.length > 0;
+          const competition = (await strapi.db
+            .query('api::competition.competition')
+            .findOne({
+              where: { id: competitionId },
+              populate: { batchLimits: { populate: { batch: true } } },
+            })) as {
+            id: number;
+            operationType?: 'average' | 'sum' | null;
+            batchLimits?: BatchLimitLike[] | null;
+          } | null;
 
-      const results = (await strapi.db
-        .query('api::competition-result.competition-result')
-        .findMany({
-          where: { competition: competitionId },
-          populate: {
-            batch: true,
-            model: { populate: { category: { populate: { batches: true } } } },
-            evaluations: { populate: { criteria: true } },
-          },
-        })) as ResultForAllocation[];
+          if (!competition) return;
 
-      if (results.length === 0) return;
+          const operationType = competition.operationType ?? 'average';
+          const batchLimits = (competition.batchLimits ?? []).filter(
+            (entry) => entry?.batch?.id != null
+          );
+          const hasQuota = batchLimits.length > 0;
 
-      const scored = results.map((result) => {
-        const evaluations = result.evaluations ?? [];
-        const tieBreak = computeTieBreakKey(evaluations);
-        return {
-          result,
-          totalPoints: computeTotalPoints(evaluations, operationType),
-          keyPoints: tieBreak.keyPoints,
-          keyWeight: tieBreak.keyWeight,
-          gradedAt: tieBreak.gradedAt,
-        };
-      });
+          const results = (await strapi.db
+            .query('api::competition-result.competition-result')
+            .findMany({
+              where: { competition: competitionId },
+              populate: {
+                batch: true,
+                model: { populate: { category: { populate: { batches: true } } } },
+                evaluations: { populate: { criteria: true } },
+              },
+            })) as ResultForAllocation[];
 
-      scored.sort((a, b) => {
-        if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
-        if (b.keyPoints !== a.keyPoints) return b.keyPoints - a.keyPoints;
-        if (b.keyWeight !== a.keyWeight) return b.keyWeight - a.keyWeight;
-        if (a.gradedAt !== b.gradedAt) return a.gradedAt - b.gradedAt;
-        return a.result.id - b.result.id;
-      });
+          if (results.length === 0) return;
 
-      const levels = hasQuota
-        ? batchLimits
-            .map((entry) => ({
-              batchId: entry.batch!.id,
-              requiredValue: entry.batch?.requiredValue ?? 0,
-              capacity: (entry.limit ?? 0) > 0 ? entry.limit! : 0,
-            }))
-            .sort((a, b) => b.requiredValue - a.requiredValue)
-        : [];
+          const scored = results.map((result) => {
+            const evaluations = result.evaluations ?? [];
+            const tieBreak = computeTieBreakKey(evaluations);
+            return {
+              result,
+              totalPoints: computeTotalPoints(evaluations, operationType),
+              keyPoints: tieBreak.keyPoints,
+              keyWeight: tieBreak.keyWeight,
+              gradedAt: tieBreak.gradedAt,
+            };
+          });
 
-      const capacity = new Map<number, number>();
-      for (const level of levels) capacity.set(level.batchId, level.capacity);
+          scored.sort((a, b) => {
+            if (b.totalPoints !== a.totalPoints) return b.totalPoints - a.totalPoints;
+            if (b.keyPoints !== a.keyPoints) return b.keyPoints - a.keyPoints;
+            if (b.keyWeight !== a.keyWeight) return b.keyWeight - a.keyWeight;
+            if (a.gradedAt !== b.gradedAt) return a.gradedAt - b.gradedAt;
+            return a.result.id - b.result.id;
+          });
 
-      const assignedCount = new Map<number, number>();
-      const updates: ResultUpdate[] = [];
+          const levels = hasQuota
+            ? batchLimits
+                .map((entry) => ({
+                  batchId: entry.batch!.id,
+                  requiredValue: entry.batch?.requiredValue ?? 0,
+                  capacity: (entry.limit ?? 0) > 0 ? entry.limit! : 0,
+                }))
+                .sort((a, b) => b.requiredValue - a.requiredValue)
+            : [];
 
-      scored.forEach((scoredEntry, index) => {
-        const { result, totalPoints } = scoredEntry;
+          const capacity = new Map<number, number>();
+          for (const level of levels) capacity.set(level.batchId, level.capacity);
 
-        let assignedBatchId: number | null = null;
+          const assignedCount = new Map<number, number>();
+          const updates: ResultUpdate[] = [];
 
-        if (hasQuota) {
-          for (const level of levels) {
-            const remaining = capacity.get(level.batchId) ?? 0;
-            if (totalPoints >= level.requiredValue && remaining > 0) {
-              assignedBatchId = level.batchId;
-              capacity.set(level.batchId, remaining - 1);
-              break;
+          scored.forEach((scoredEntry, index) => {
+            const { result, totalPoints } = scoredEntry;
+
+            let assignedBatchId: number | null = null;
+
+            if (hasQuota) {
+              for (const level of levels) {
+                const remaining = capacity.get(level.batchId) ?? 0;
+                if (totalPoints >= level.requiredValue && remaining > 0) {
+                  assignedBatchId = level.batchId;
+                  capacity.set(level.batchId, remaining - 1);
+                  break;
+                }
+              }
+            } else {
+              let bestRequiredValue = -Infinity;
+              for (const batch of result.model?.category?.batches ?? []) {
+                const requiredValue = batch.requiredValue ?? 0;
+                if (totalPoints >= requiredValue && requiredValue > bestRequiredValue) {
+                  bestRequiredValue = requiredValue;
+                  assignedBatchId = batch.id;
+                }
+              }
+            }
+
+            if (assignedBatchId !== null) {
+              assignedCount.set(assignedBatchId, (assignedCount.get(assignedBatchId) ?? 0) + 1);
+            }
+
+            const update: ResultUpdate = { id: result.id };
+            const currentBatchId = result.batch?.id ?? null;
+            if (assignedBatchId !== currentBatchId) update.batch = assignedBatchId;
+            if (roundToTwo(result.totalPoints ?? 0) !== totalPoints) {
+              update.totalPoints = totalPoints;
+            }
+            if ((result.order ?? 0) !== index + 1) update.order = index + 1;
+
+            if (Object.keys(update).length > 1) updates.push(update);
+          });
+
+          await applyResultUpdates(updates);
+
+          if (hasQuota) {
+            for (const entry of batchLimits) {
+              const count = assignedCount.get(entry.batch!.id) ?? 0;
+              if ((entry.assigned ?? 0) !== count) {
+                await strapi.db
+                  .query('competition.batch-limits')
+                  .update({ where: { id: entry.id }, data: { assigned: count } });
+              }
             }
           }
-        } else {
-          let bestRequiredValue = -Infinity;
-          for (const batch of result.model?.category?.batches ?? []) {
-            const requiredValue = batch.requiredValue ?? 0;
-            if (totalPoints >= requiredValue && requiredValue > bestRequiredValue) {
-              bestRequiredValue = requiredValue;
-              assignedBatchId = batch.id;
-            }
-          }
-        }
-
-        if (assignedBatchId !== null) {
-          assignedCount.set(assignedBatchId, (assignedCount.get(assignedBatchId) ?? 0) + 1);
-        }
-
-        const update: ResultUpdate = { id: result.id };
-        const currentBatchId = result.batch?.id ?? null;
-        if (assignedBatchId !== currentBatchId) update.batch = assignedBatchId;
-        if (roundToTwo(result.totalPoints ?? 0) !== totalPoints) {
-          update.totalPoints = totalPoints;
-        }
-        if ((result.order ?? 0) !== index + 1) update.order = index + 1;
-
-        if (Object.keys(update).length > 1) updates.push(update);
-      });
-
-      await applyResultUpdates(updates);
-
-      if (hasQuota) {
-        for (const entry of batchLimits) {
-          const count = assignedCount.get(entry.batch!.id) ?? 0;
-          if ((entry.assigned ?? 0) !== count) {
-            await strapi.db
-              .query('competition.batch-limits')
-              .update({ where: { id: entry.id }, data: { assigned: count } });
-          }
-        }
+        });
+      } finally {
+        recomputeInFlight.delete(competitionId);
       }
     },
 
@@ -514,7 +548,8 @@ export default factories.createCoreService(
         errors: { participant?: string; error: string }[];
       } = { total: byUser.size, sent: 0, failed: 0, errors: [] };
 
-      for (const { user, results: userResults } of byUser.values()) {
+      const recipients = Array.from(byUser.values());
+      await mapLimit(recipients, 5, async ({ user, results: userResults }) => {
         try {
           const { subject, html } = buildResultEmailHtml({ user, results: userResults });
           await sendEmail({ to: user.email, subject, html });
@@ -526,7 +561,7 @@ export default factories.createCoreService(
             error: error?.message ?? String(error),
           });
         }
-      }
+      });
 
       return summary;
     },
