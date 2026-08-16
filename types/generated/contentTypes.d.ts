@@ -636,7 +636,7 @@ export interface ApiCompetitionBatchCompetitionBatch
     > &
       Schema.Attribute.Private;
     publishedAt: Schema.Attribute.DateTime;
-    requiredValue: Schema.Attribute.Integer & Schema.Attribute.DefaultTo<0>;
+    requiredValue: Schema.Attribute.Decimal & Schema.Attribute.DefaultTo<0>;
     updatedAt: Schema.Attribute.DateTime;
     updatedBy: Schema.Attribute.Relation<'oneToOne', 'admin::user'> &
       Schema.Attribute.Private;

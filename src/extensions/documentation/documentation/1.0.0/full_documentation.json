@@ -14,7 +14,7 @@
       "name": "Apache 2.0",
       "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
     },
-    "x-generation-date": "2026-08-12T00:42:42.691Z"
+    "x-generation-date": "2026-08-16T19:47:13.640Z"
   },
   "x-strapi-config": {
     "plugins": [
@@ -28716,7 +28716,8 @@
                                 }
                               },
                               "requiredValue": {
-                                "type": "integer"
+                                "type": "number",
+                                "format": "float"
                               },
                               "createdAt": {
                                 "type": "string",
@@ -29671,7 +29672,8 @@
                 "example": "string or id"
               },
               "requiredValue": {
-                "type": "integer"
+                "type": "number",
+                "format": "float"
               },
               "locale": {
                 "type": "string"
@@ -30878,7 +30880,8 @@
             }
           },
           "requiredValue": {
-            "type": "integer"
+            "type": "number",
+            "format": "float"
           },
           "createdAt": {
             "type": "string",
@@ -31136,7 +31139,8 @@
                   }
                 },
                 "requiredValue": {
-                  "type": "integer"
+                  "type": "number",
+                  "format": "float"
                 },
                 "createdAt": {
                   "type": "string",
@@ -32500,7 +32504,8 @@
                   }
                 },
                 "requiredValue": {
-                  "type": "integer"
+                  "type": "number",
+                  "format": "float"
                 },
                 "createdAt": {
                   "type": "string",
@@ -37912,7 +37917,8 @@
                                     }
                                   },
                                   "requiredValue": {
-                                    "type": "integer"
+                                    "type": "number",
+                                    "format": "float"
                                   },
                                   "createdAt": {
                                     "type": "string",
@@ -42771,7 +42777,8 @@
                                 }
                               },
                               "requiredValue": {
-                                "type": "integer"
+                                "type": "number",
+                                "format": "float"
                               },
                               "createdAt": {
                                 "type": "string",
@@ -47706,7 +47713,8 @@
                                 }
                               },
                               "requiredValue": {
-                                "type": "integer"
+                                "type": "number",
+                                "format": "float"
                               },
                               "createdAt": {
                                 "type": "string",
