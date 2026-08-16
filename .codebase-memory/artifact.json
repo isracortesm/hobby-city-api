@@ -1,11 +1,11 @@
 {
     "schema_version": 2,
-    "commit": "f64542edc82ed2977591a63ab33e698e28dcb2c4",
-    "indexed_at": "2026-08-15T02:57:17Z",
+    "commit": "99fe000c12f687070af8b6ff882039fd88f641e0",
+    "indexed_at": "2026-08-16T01:14:36Z",
     "project": "home-icortes-Proyectos-hobby-city-hobby-city-api",
     "nodes": 1461,
-    "edges": 1483,
+    "edges": 1481,
     "original_size": 4194304,
-    "compressed_size": 330139,
+    "compressed_size": 330576,
     "compression_level": 3
 }
