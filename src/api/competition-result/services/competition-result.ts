@@ -232,25 +232,31 @@ function buildResultEmailHtml(input: {
       let evaluationsHtml = '';
       if (grouped.size > 0) {
         const judgesHtml = Array.from(grouped.values())
-          .map(
-            (group) => `
+          .map((group) => {
+            const feedback = group.evaluations.filter((evaluation) => evaluation.comments);
+            const feedbackList =
+              feedback.length > 0
+                ? feedback
+                    .map(
+                      (evaluation) =>
+                        `<li><strong>${escapeHtml(evaluation.name ?? 'Criterio')}:</strong> ${escapeHtml(
+                          evaluation.comments
+                        )}</li>`
+                    )
+                    .join('')
+                : '<li style="color:#6b7280;">Sin comentarios.</li>';
+
+            return `
             <div style="margin:10px 0;">
               <strong style="color:#4338ca;">${group.reviewerName}</strong>
               <ul style="margin:6px 0 0;padding-left:20px;">
-                ${group.evaluations
-                  .map(
-                    (evaluation) =>
-                      `<li><strong>${escapeHtml(evaluation.name ?? 'Criterio')}:</strong> ${escapeHtml(
-                        evaluation.points
-                      )} pts${evaluation.comments ? ` — ${escapeHtml(evaluation.comments)}` : ''}</li>`
-                  )
-                  .join('')}
+                ${feedbackList}
               </ul>
-            </div>`
-          )
+            </div>`;
+          })
           .join('');
         evaluationsHtml = `
-          <h4 style="margin:12px 0 4px;">Evaluaciones por juez</h4>
+          <h4 style="margin:12px 0 4px;">Feedback por juez</h4>
           ${judgesHtml}`;
       } else {
         evaluationsHtml = '<p style="color:#6b7280;">Sin evaluaciones registradas.</p>';
