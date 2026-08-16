@@ -309,7 +309,7 @@ exports.default = strapi_1.factories.createCoreService('api::competition-result.
         }));
     },
     async sendResultEmailToParticipant(input) {
-        const { participantDocumentId, competitionDocumentId } = input;
+        const { participantDocumentId, competitionDocumentId, cc } = input;
         const user = (await strapi.db
             .query('plugin::users-permissions.user')
             .findOne({ where: { documentId: participantDocumentId } }));
@@ -327,7 +327,7 @@ exports.default = strapi_1.factories.createCoreService('api::competition-result.
             throw new ApplicationError('The participant has no results in this competition');
         }
         const { subject, html } = buildResultEmailHtml({ user, results });
-        await sendEmail({ to: user.email, subject, html });
+        await sendEmail({ to: user.email, cc, subject, html });
         return { sentTo: user.email, resultsCount: results.length };
     },
     async sendResultEmailsToAll(input) {

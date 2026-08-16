@@ -2,8 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const config = {
     rest: {
-        defaultLimit: 25,
-        maxLimit: 100,
+        defaultLimit: 2000,
+        maxLimit: 2000,
         withCount: true,
     },
 };

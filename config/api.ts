@@ -2,8 +2,8 @@ import type { Core } from '@strapi/strapi';
 
 const config: Core.Config.Api = {
   rest: {
-    defaultLimit: 25,
-    maxLimit: 100,
+    defaultLimit: 2000,
+    maxLimit: 2000,
     withCount: true,
   },
 };
